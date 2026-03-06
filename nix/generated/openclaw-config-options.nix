@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev fa6c0e1b404f094e579b5fb192c6643c7822c1b6. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 151f26070b04db162fe5afb515cfc4bbc5f4325d. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -11985,6 +11985,10 @@ in
     };
     slots = lib.mkOption {
       type = t.nullOr (t.submodule { options = {
+      contextEngine = lib.mkOption {
+        type = t.nullOr (t.str);
+        default = null;
+      };
       memory = lib.mkOption {
         type = t.nullOr (t.str);
         default = null;
