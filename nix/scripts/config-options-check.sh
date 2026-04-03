@@ -42,15 +42,15 @@ fi
 cp "$CONFIG_OPTIONS_GENERATOR" ./generate-config-options.ts
 cp "$NODE_ENGINE_CHECK" ./check-node-engine.ts
 
-if [ ! -x "./node_modules/.bin/tsx" ]; then
-  echo "tsx not found at ./node_modules/.bin/tsx (run gateway-tests-build.sh first)" >&2
+if ! command -v pnpm >/dev/null 2>&1; then
+  echo "pnpm not found in PATH (run gateway-tests-build.sh first)" >&2
   exit 1
 fi
 
-./node_modules/.bin/tsx ./check-node-engine.ts --repo .
+pnpm exec tsx ./check-node-engine.ts --repo .
 
 output_path="./generated-config-options.nix"
 
-./node_modules/.bin/tsx ./generate-config-options.ts --repo . --out "$output_path"
+pnpm exec tsx ./generate-config-options.ts --repo . --out "$output_path"
 
 diff -u "$CONFIG_OPTIONS_GOLDEN" "$output_path"
