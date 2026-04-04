@@ -83,6 +83,16 @@ if [ -z "${tsdown_cli:-}" ] || [ ! -f "$tsdown_cli" ]; then
   exit 1
 fi
 
+tsc_cli="node_modules/typescript/bin/tsc"
+if [ ! -f "$tsc_cli" ]; then
+  tsc_cli="$(find node_modules -path '*/typescript/bin/tsc' -type f | head -n 1)"
+fi
+
+if [ -z "${tsc_cli:-}" ] || [ ! -f "$tsc_cli" ]; then
+  echo "TypeScript CLI not found under ./node_modules" >&2
+  exit 1
+fi
+
 if [ -z "${STDENV_SETUP:-}" ]; then
   echo "STDENV_SETUP is not set" >&2
   exit 1
@@ -97,6 +107,6 @@ log_step "patchShebangs node_modules/.bin" bash -e -c ". \"$STDENV_SETUP\"; patc
 log_step "node $tsdown_cli" node "$tsdown_cli" --config-loader unrun --logLevel warn
 log_step "node scripts/runtime-postbuild.mjs" node scripts/runtime-postbuild.mjs
 log_step "node scripts/build-stamp.mjs" node scripts/build-stamp.mjs
-log_step "pnpm build:plugin-sdk:dts" pnpm build:plugin-sdk:dts
+log_step "node $tsc_cli" node "$tsc_cli" -p tsconfig.plugin-sdk.dts.json
 log_step "node --import tsx scripts/write-plugin-sdk-entry-dts.ts" node --import tsx scripts/write-plugin-sdk-entry-dts.ts
 log_step "node scripts/check-plugin-sdk-exports.mjs" node scripts/check-plugin-sdk-exports.mjs
