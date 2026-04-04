@@ -24,7 +24,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          latest_ci=$(gh run list --workflow CI --branch main --limit 1 --json status,conclusion)
+          latest_ci=$(gh run list --repo openclaw/nix-openclaw --workflow CI --branch main --limit 1 --json status,conclusion)
           if [[ "$(jq 'length' <<<"$latest_ci")" -eq 0 ]]; then
             echo "No CI run on main yet; freezing yolo."
             echo "should_run=false" >>"$GITHUB_OUTPUT"
