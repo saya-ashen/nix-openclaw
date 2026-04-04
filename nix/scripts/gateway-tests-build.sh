@@ -54,11 +54,24 @@ ensure_root_package_link() {
   ln -s "$pkg_dir" "$root_path"
 }
 
+ensure_root_bin_link() {
+  bin_name="$1"
+  target_rel="$2"
+  bin_path="node_modules/.bin/$bin_name"
+
+  mkdir -p "$(dirname "$bin_path")"
+  rm -f "$bin_path"
+  ln -s "$target_rel" "$bin_path"
+}
+
 # Offline hoisted installs in Nix can leave the top-level package link missing
 # while the package still exists under node_modules/.pnpm.
 ensure_root_package_link "tsdown"
 ensure_root_package_link "tsx"
 ensure_root_package_link "vitest"
+ensure_root_bin_link "tsdown" "../tsdown/dist/run.mjs"
+ensure_root_bin_link "tsx" "../tsx/dist/cli.mjs"
+ensure_root_bin_link "vitest" "../vitest/vitest.mjs"
 
 if [ -z "${STDENV_SETUP:-}" ]; then
   echo "STDENV_SETUP is not set" >&2
