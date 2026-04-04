@@ -35,7 +35,7 @@ export NPM_CONFIG_STORE_DIR="$store_path"
 export NPM_CONFIG_STORE_PATH="$store_path"
 export HOME="$(mktemp -d)"
 
-log_step "pnpm install (tests/config)" pnpm install --offline --frozen-lockfile --ignore-scripts --store-dir "$store_path"
+log_step "pnpm install (tests/config)" pnpm install --offline --frozen-lockfile --ignore-scripts --prod=false --store-dir "$store_path"
 
 if [ -z "${STDENV_SETUP:-}" ]; then
   echo "STDENV_SETUP is not set" >&2
