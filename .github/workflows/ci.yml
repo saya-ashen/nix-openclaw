@@ -22,6 +22,12 @@ jobs:
       - name: Run Linux CI aggregator
         run: nix build .#checks.x86_64-linux.ci --accept-flake-config
 
+      - name: Dump failing gateway test log
+        if: failure()
+        run: |
+          drv="$(nix eval --raw .#checks.x86_64-linux.gateway-tests.drvPath --accept-flake-config)"
+          nix log "$drv" | tail -n 400 || true
+
   macos:
     runs-on: macos-14
     steps:
