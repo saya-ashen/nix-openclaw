@@ -107,6 +107,18 @@ in
       };
     };
 
+    manageConfig = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Manage generated OpenClaw config files (openclaw.json) via Home Manager.";
+    };
+
+    manageDocuments = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Manage workspace documents and skills via Home Manager.";
+    };
+
     documents = lib.mkOption {
       type = lib.types.nullOr lib.types.path;
       default = null;

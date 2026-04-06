@@ -266,7 +266,7 @@ in
     );
 
     home.file = lib.mkMerge [
-      (lib.listToAttrs (map (item: item.homeFile) instanceConfigs))
+      (lib.optionalAttrs cfg.manageConfig (lib.listToAttrs (map (item: item.homeFile) instanceConfigs)))
       (lib.optionalAttrs (pkgs.stdenv.hostPlatform.isDarwin && appPackage != null && cfg.installApp) {
         "Applications/OpenClaw.app" = {
           source = "${appPackage}/Applications/OpenClaw.app";
@@ -275,8 +275,8 @@ in
         };
       })
       (lib.listToAttrs appInstalls)
-      files.documentsFiles
-      files.skillFiles
+      (lib.optionalAttrs cfg.manageDocuments files.documentsFiles)
+      (lib.optionalAttrs cfg.manageDocuments files.skillFiles)
       plugins.pluginConfigFiles
       (lib.optionalAttrs cfg.reloadScript.enable {
         ".local/bin/openclaw-reload" = {
@@ -286,7 +286,7 @@ in
       })
     ];
 
-    home.activation.openclawDocumentGuard = lib.mkIf files.documentsEnabled (
+    home.activation.openclawDocumentGuard = lib.mkIf (files.documentsEnabled && cfg.manageDocuments) (
       lib.hm.dag.entryBefore [ "writeBoundary" ] ''
         set -euo pipefail
         ${files.documentsGuard}

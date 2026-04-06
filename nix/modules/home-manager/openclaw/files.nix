@@ -226,12 +226,18 @@ let
         mkDocFiles =
           dir:
           let
-            mkDoc = name: {
-              name = toRelative (dir + "/${name}");
-              value = {
+            mkDoc =
+              name:
+              let
+                target = dir + "/${name}";
                 source = if name == "TOOLS.md" then toolsWithReport else cfg.documents + "/${name}";
+              in
+              {
+                name = toRelative target;
+                value = {
+                  text = builtins.readFile source;
+                };
               };
-            };
           in
           lib.listToAttrs (map mkDoc documentsFileNames);
       in

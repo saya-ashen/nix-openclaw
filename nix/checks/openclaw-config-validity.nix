@@ -74,6 +74,9 @@ let
               launchd.enable = false;
               systemd.enable = false;
               instances.default = { };
+              documents = pkgs.writeTextDir "documents/AGENTS.md" "# Agent\n"
+                // pkgs.writeTextDir "documents/SOUL.md" "# Soul\n"
+                // pkgs.writeTextDir "documents/TOOLS.md" "# Tools\n";
               config = {
                 gateway = {
                   bind = "tailnet";
@@ -97,8 +100,21 @@ let
   };
 
   configPathKey = ".openclaw/openclaw.json";
+  documentsPathKeys = [
+    ".openclaw/workspace/AGENTS.md"
+    ".openclaw/workspace/SOUL.md"
+    ".openclaw/workspace/TOOLS.md"
+  ];
   configJson = moduleEval.config.home.file."${configPathKey}".text;
   configFile = pkgs.writeText "openclaw-config.json" configJson;
+  documentsTexts = map (
+    pathKey:
+    let
+      entry = moduleEval.config.home.file."${pathKey}";
+    in
+    entry.text or (throw "Expected managed document ${pathKey} to be written as text.")
+  ) documentsPathKeys;
+  documentsKey = builtins.deepSeq documentsTexts "ok";
 
 in
 stdenv.mkDerivation {
@@ -114,6 +130,7 @@ stdenv.mkDerivation {
   env = {
     OPENCLAW_CONFIG_PATH = configFile;
     OPENCLAW_SRC = "${openclawGateway}/lib/openclaw";
+    OPENCLAW_DOCUMENTS_TEXT = documentsKey;
   };
 
   doCheck = true;
