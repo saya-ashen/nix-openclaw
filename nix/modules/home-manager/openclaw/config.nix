@@ -21,6 +21,7 @@ let
     gatewayPort = 18789;
     gatewayPath = null;
     gatewayPnpmDepsHash = lib.fakeHash;
+    envFile = cfg.envFile;
     launchd = cfg.launchd;
     systemd = cfg.systemd;
     plugins = openclawLib.effectivePlugins;
@@ -98,6 +99,7 @@ let
           inst.package;
       pluginPackages = plugins.pluginPackagesFor name;
       pluginEnvAll = plugins.pluginEnvAllFor name;
+      envFile = inst.envFile;
       mergedConfig0 = stripNulls (
         lib.recursiveUpdate (lib.recursiveUpdate baseConfig cfg.config) inst.config
       );
@@ -121,6 +123,17 @@ let
         if [ -n "${lib.makeBinPath pluginPackages}" ]; then
           export PATH="${lib.makeBinPath pluginPackages}:$PATH"
         fi
+
+        ${lib.optionalString (envFile != null) ''
+          if [ -f "${envFile}" ]; then
+            set -a
+            . "${envFile}"
+            set +a
+          else
+            echo "OpenClaw env file not found: ${envFile}" >&2
+            exit 1
+          fi
+        ''}
 
         ${lib.concatStringsSep "\n" (
           map (
@@ -208,6 +221,8 @@ let
               OPENCLAW_STATE_DIR = inst.stateDir;
               OPENCLAW_IMAGE_BACKEND = "sips";
               OPENCLAW_NIX_MODE = "1";
+            } // lib.optionalAttrs (envFile != null) {
+              OPENCLAW_ENV_FILE = envFile;
             };
           };
         };
@@ -228,7 +243,7 @@ let
               "OPENCLAW_CONFIG_PATH=${inst.configPath}"
               "OPENCLAW_STATE_DIR=${inst.stateDir}"
               "OPENCLAW_NIX_MODE=1"
-            ];
+            ] ++ lib.optional (envFile != null) "OPENCLAW_ENV_FILE=${envFile}";
             StandardOutput = "append:${inst.logPath}";
             StandardError = "append:${inst.logPath}";
           };

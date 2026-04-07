@@ -73,7 +73,9 @@ let
               enable = true;
               launchd.enable = false;
               systemd.enable = false;
-              instances.default = { };
+              instances.default = {
+                envFile = "/tmp/openclaw-test.env";
+              };
               documents = pkgs.writeTextDir "documents/AGENTS.md" "# Agent\n"
                 // pkgs.writeTextDir "documents/SOUL.md" "# Soul\n"
                 // pkgs.writeTextDir "documents/TOOLS.md" "# Tools\n";
@@ -115,6 +117,9 @@ let
     entry.text or (throw "Expected managed document ${pathKey} to be written as text.")
   ) documentsPathKeys;
   documentsKey = builtins.deepSeq documentsTexts "ok";
+  systemdEnv = moduleEval.config.systemd.user.services.openclaw-gateway.Service.Environment or [ ];
+  hasEnvFileVar = builtins.elem "OPENCLAW_ENV_FILE=/tmp/openclaw-test.env" systemdEnv;
+  envFileKey = builtins.deepSeq hasEnvFileVar "ok";
 
 in
 stdenv.mkDerivation {
@@ -131,6 +136,7 @@ stdenv.mkDerivation {
     OPENCLAW_CONFIG_PATH = configFile;
     OPENCLAW_SRC = "${openclawGateway}/lib/openclaw";
     OPENCLAW_DOCUMENTS_TEXT = documentsKey;
+    OPENCLAW_ENV_FILE_KEY = envFileKey;
   };
 
   doCheck = true;

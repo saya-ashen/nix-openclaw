@@ -65,6 +65,12 @@
       description = "pnpmDeps hash for local gateway builds (omit to let Nix suggest the correct hash).";
     };
 
+    envFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Shell-style env file loaded before launching this OpenClaw instance.";
+    };
+
     plugins = lib.mkOption {
       type = lib.types.listOf (
         lib.types.submodule {

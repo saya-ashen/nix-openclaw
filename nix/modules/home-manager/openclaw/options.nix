@@ -119,6 +119,12 @@ in
       description = "Manage workspace documents and skills via Home Manager.";
     };
 
+    envFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Shell-style env file loaded before launching OpenClaw (lines like KEY=value or export KEY=value).";
+    };
+
     documents = lib.mkOption {
       type = lib.types.nullOr lib.types.path;
       default = null;
