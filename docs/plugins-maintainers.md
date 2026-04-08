@@ -17,7 +17,7 @@ plugin = pkgs.mkOpenclawPlugin {
   skills      = [ ./skills/summarize ];      # dirs containing SKILL.md
   packages    = [ pkgs.summarize-cli ];      # binaries placed on PATH
   needs = {
-    stateDirs   = [ ".config/summarize" ]; # created under $HOME
+    stateDirs   = [ ".config/summarize" ]; # created under the instance state root
     requiredEnv = [ "SUMMARIZE_API_KEY" ];  # must point to files
   };
 };
@@ -26,7 +26,7 @@ plugin = pkgs.mkOpenclawPlugin {
 Host responsibilities (what the runtime guarantees):
 - Build/resolve the plugin package; read `passthru.openclawPlugin`.
 - Install `packages`; prepend to PATH for the gateway wrapper.
-- Create `needs.stateDirs` under `$HOME`.
+- Create `needs.stateDirs` under the instance state root (for example `~/.openclaw` or `~/.openclaw-<name>`).
 - Fail fast if any `requiredEnv` is unset or points to a missing/empty file.
 - Copy/symlink `skills` into `workspace/skills/<name>/...`.
 - If host config provides `settings`, render it to `openclaw.json.plugins.entries.<plugin>.config` and also to `config.json` in the first `stateDir` when one exists.

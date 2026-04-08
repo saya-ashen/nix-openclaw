@@ -197,6 +197,10 @@ let
     }
     then "ok"
     else throw "Expected plugin settings mirror at ${pluginConfigPathKey}.";
+  pluginStateDirKey =
+    if moduleEval.config.home.file ? ".openclaw/.config/example-plugin/config.json"
+    then "ok"
+    else throw "Expected plugin state files to live under the instance state root.";
   configFile = pkgs.writeText "openclaw-config.json" configJson;
   documentsTexts = map (
     pathKey:
@@ -229,6 +233,7 @@ stdenv.mkDerivation {
     OPENCLAW_PLUGIN_ENTRY_KEY = pluginEntryKey;
     OPENCLAW_PLUGIN_SLOTS_KEY = pluginSlotsKey;
     OPENCLAW_PLUGIN_CONFIG_KEY = pluginConfigKey;
+    OPENCLAW_PLUGIN_STATE_DIR_KEY = pluginStateDirKey;
   };
 
   doCheck = true;

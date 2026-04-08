@@ -458,7 +458,7 @@ let
     skills = [ ./skills/hello-world ];
     packages = [ pkgs.hello ]; # CLI tools to install
     needs = {
-      stateDirs = [];          # Directories to create (relative to ~)
+      stateDirs = [];          # Directories to create (relative to the instance state root)
       requiredEnv = [];        # Required environment variables
     };
   };
@@ -548,7 +548,7 @@ programs.openclaw.plugins.my-plugin = {
 
 Config flags the host will use:
 - `env` for required env vars (e.g., MYPLUGIN_AUTH_FILE)
-- `settings` for typed config keys (rendered to `openclaw.json.plugins.entries.<plugin>.config`, and also written to `config.json` in the first stateDir when one exists)
+- `settings` for typed config keys (rendered to `openclaw.json.plugins.entries.<plugin>.config`, and also written to `config.json` in the first stateDir under the instance state root when one exists)
 
 CI note:
 - If the repo uses Garnix, add the plugin build to its `garnix.yaml` (or equivalent) so CI verifies it.

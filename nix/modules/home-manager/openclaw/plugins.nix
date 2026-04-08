@@ -109,8 +109,9 @@
 
   pluginStateDirsFor = instName: let
     dirs = lib.flatten (map (p: p.needs.stateDirs) (resolvedPluginsByInstance.${instName} or []));
+    baseDir = pluginBaseDirFor instName;
   in
-    map (dir: resolvePath ("~/" + dir)) dirs;
+    map (dir: "${baseDir}/${dir}") dirs;
 
   pluginStateDirsAll = lib.flatten (map pluginStateDirsFor (lib.attrNames enabledInstances));
 
