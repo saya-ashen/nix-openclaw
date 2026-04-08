@@ -2,26 +2,10 @@
   lib,
   pkgs,
   stdenv,
-  fetchFromGitHub,
-  fetchurl,
-  nodejs_22,
-  pnpm_10,
-  fetchPnpmDeps,
-  pkg-config,
-  jq,
-  python3,
-  node-gyp,
-  git,
-  zstd,
-  sourceInfo,
-  pnpmDepsHash ? (sourceInfo.pnpmDepsHash or null),
+  openclawGateway,
 }:
 
 let
-  pluginCatalog = import ../modules/home-manager/openclaw/plugin-catalog.nix;
-  linuxBundledPlugins = builtins.attrNames (lib.filterAttrs (_: plugin: plugin.linux or false) pluginCatalog);
-  enableBundledPlugin = name: stdenv.hostPlatform.isDarwin || lib.elem name linuxBundledPlugins;
-
   stubModule =
     { lib, ... }:
     {
@@ -88,10 +72,18 @@ let
               enable = true;
               launchd.enable = false;
               systemd.enable = false;
-              instances.default = { };
-              bundledPlugins = lib.mapAttrs (name: _: {
-                enable = enableBundledPlugin name;
-              }) options.programs.openclaw.bundledPlugins;
+              plugins.example-plugin = {
+                package = pkgs.mkOpenclawPlugin {
+                  name = "example-plugin";
+                  src = builtins.path {
+                    name = "example-plugin-src";
+                    path = pkgs.writeTextDir "manifest.json" "{}\n";
+                  };
+                };
+              };
+              instances.default.plugins = {
+                _slots.memory = "example-plugin";
+              };
             };
           };
         }
@@ -101,61 +93,61 @@ let
   };
 
   pluginEvalKey = builtins.deepSeq pluginEval.config.assertions "ok";
-
-  common =
-    import ../lib/openclaw-gateway-common.nix
-      {
-        inherit
-          lib
-          stdenv
-          fetchFromGitHub
-          fetchurl
-          nodejs_22
-          pnpm_10
-          fetchPnpmDeps
-          pkg-config
-          jq
-          python3
-          node-gyp
-          git
-          zstd
-          ;
-      }
-      {
-        pname = "openclaw-config-options";
-        sourceInfo = sourceInfo;
-        pnpmDepsHash = pnpmDepsHash;
-        pnpmDepsPname = "openclaw-gateway";
-      };
-
 in
-
-stdenv.mkDerivation (finalAttrs: {
+stdenv.mkDerivation {
   pname = "openclaw-config-options";
-  inherit (common) version;
+  version = lib.getVersion openclawGateway;
 
-  src = common.resolvedSrc;
-  pnpmDeps = common.pnpmDeps;
+  src = openclawGateway.src;
+  nativeBuildInputs = openclawGateway.nativeBuildInputs;
+  buildInputs = openclawGateway.buildInputs or [ ];
 
-  nativeBuildInputs = common.nativeBuildInputs;
-
-  env = common.env // {
-    PNPM_DEPS = finalAttrs.pnpmDeps;
+  env = {
+    inherit (openclawGateway) pnpmDeps;
     CONFIG_OPTIONS_GENERATOR = "${../scripts/generate-config-options.ts}";
     CONFIG_OPTIONS_GOLDEN = "${../generated/openclaw-config-options.nix}";
     NODE_ENGINE_CHECK = "${../scripts/check-node-engine.ts}";
     OPENCLAW_PLUGIN_EVAL = pluginEvalKey;
-    OPENCLAW_SCHEMA_REV = sourceInfo.rev;
+    OPENCLAW_SCHEMA_REV = lib.getVersion openclawGateway;
   };
 
-  passthru = common.passthru;
+  postPatch = ''
+    if [ -f package.json ]; then
+      sed -i '/"packageManager"[[:space:]]*:/d' package.json
+    fi
 
-  buildPhase = "${../scripts/gateway-tests-build.sh}";
-  postPatch = "${../scripts/gateway-postpatch.sh}";
+    if [ -f scripts/stage-bundled-plugin-runtime-deps.mjs ]; then
+      sed -i 's/if (installedVersion === null || !dependencyVersionSatisfied(spec, installedVersion)) {/if (installedVersion === null) {/' scripts/stage-bundled-plugin-runtime-deps.mjs
+    fi
+  '';
+
+  buildPhase = ''
+    runHook preBuild
+
+    export HOME="$(mktemp -d)"
+    export TMPDIR="$HOME/tmp"
+    mkdir -p "$TMPDIR"
+
+    pnpm install --offline --frozen-lockfile --ignore-scripts --prod=false
+
+    ${lib.optionalString ((openclawGateway.rolldownPackage or null) != null) ''
+      rm -rf node_modules/rolldown node_modules/@rolldown/pluginutils
+      mkdir -p node_modules/@rolldown node_modules/.pnpm/node_modules/@rolldown
+      cp -r ${openclawGateway.rolldownPackage}/lib/node_modules/rolldown node_modules/rolldown
+      cp -r ${openclawGateway.rolldownPackage}/lib/node_modules/@rolldown/pluginutils node_modules/@rolldown/pluginutils
+      cp -r ${openclawGateway.rolldownPackage}/lib/node_modules/rolldown node_modules/.pnpm/node_modules/rolldown
+      cp -r ${openclawGateway.rolldownPackage}/lib/node_modules/@rolldown/pluginutils node_modules/.pnpm/node_modules/@rolldown/pluginutils
+      chmod -R u+w node_modules/rolldown node_modules/@rolldown/pluginutils \
+        node_modules/.pnpm/node_modules/rolldown node_modules/.pnpm/node_modules/@rolldown/pluginutils
+    ''}
+
+    pnpm build
+
+    runHook postBuild
+  '';
 
   doCheck = true;
   checkPhase = "${../scripts/config-options-check.sh}";
 
   installPhase = "${../scripts/empty-install.sh}";
-  dontPatchShebangs = true;
-})
+}

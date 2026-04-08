@@ -1,6 +1,52 @@
 { lib, openclawLib }:
 
 { name, config, ... }:
+let
+  pluginOptionModule = lib.types.submodule {
+    options = {
+      package = lib.mkOption {
+        type = lib.types.nullOr lib.types.package;
+        default = null;
+        description = "Optional package override for this plugin instance.";
+      };
+      env = lib.mkOption {
+        type = lib.types.attrs;
+        default = { };
+        description = "Plugin environment overrides exported into the gateway wrapper.";
+      };
+      settings = lib.mkOption {
+        type = lib.types.attrs;
+        default = { };
+        description = "Plugin settings overrides rendered into openclaw.json.plugins.entries.<plugin>.config.";
+      };
+      enabled = lib.mkOption {
+        type = lib.types.nullOr lib.types.bool;
+        default = null;
+        description = "Optional runtime enabled override for this plugin.";
+      };
+      hooks = lib.mkOption {
+        type = lib.types.nullOr lib.types.attrs;
+        default = null;
+        description = "Optional runtime hooks override for this plugin.";
+      };
+      subagent = lib.mkOption {
+        type = lib.types.nullOr lib.types.attrs;
+        default = null;
+        description = "Optional runtime subagent override for this plugin.";
+      };
+    };
+  };
+  pluginsOptionType = lib.types.submodule {
+    freeformType = lib.types.attrsOf pluginOptionModule;
+    options = {
+      _slots = lib.mkOption {
+        type = lib.types.attrsOf lib.types.str;
+        default = { };
+        description = "Per-instance plugin slot overrides keyed by runtime slot name.";
+      };
+    };
+  };
+in
 {
   options = {
     enable = lib.mkOption {
@@ -72,23 +118,12 @@
     };
 
     plugins = lib.mkOption {
-      type = lib.types.listOf (
-        lib.types.submodule {
-          options = {
-            source = lib.mkOption {
-              type = lib.types.str;
-              description = "Plugin source pointer (e.g., github:owner/repo or path:/...).";
-            };
-            config = lib.mkOption {
-              type = lib.types.attrs;
-              default = { };
-              description = "Plugin-specific configuration (env/files/etc).";
-            };
-          };
-        }
-      );
-      default = openclawLib.effectivePlugins;
-      description = "Plugins enabled for this instance (includes bundled plugin toggles).";
+      type = pluginsOptionType;
+      default = { };
+      description = ''
+        Per-instance plugin overrides keyed by plugin name.
+        The same shape as programs.openclaw.plugins, with _slots reserved for slot overrides.
+      '';
     };
 
     config = lib.mkOption {

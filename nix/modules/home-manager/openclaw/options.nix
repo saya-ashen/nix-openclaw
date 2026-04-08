@@ -8,7 +8,50 @@
 let
   openclawLib = import ./lib.nix { inherit config lib pkgs; };
   instanceModule = import ./options-instance.nix { inherit lib openclawLib; };
-  pluginCatalog = import ./plugin-catalog.nix;
+  pluginOptionModule = lib.types.submodule {
+    options = {
+      package = lib.mkOption {
+        type = lib.types.package;
+        description = "Packaged OpenClaw plugin derivation created with pkgs.mkOpenclawPlugin or pkgs.mkOpenclawNpmPlugin.";
+      };
+      env = lib.mkOption {
+        type = lib.types.attrs;
+        default = { };
+        description = "Plugin environment values exported into the gateway wrapper.";
+      };
+      settings = lib.mkOption {
+        type = lib.types.attrs;
+        default = { };
+        description = "Plugin settings rendered into openclaw.json.plugins.entries.<plugin>.config.";
+      };
+      enabled = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Whether the plugin entry is enabled in runtime config.";
+      };
+      hooks = lib.mkOption {
+        type = lib.types.nullOr lib.types.attrs;
+        default = null;
+        description = "Optional runtime hooks written to openclaw.json.plugins.entries.<plugin>.hooks.";
+      };
+      subagent = lib.mkOption {
+        type = lib.types.nullOr lib.types.attrs;
+        default = null;
+        description = "Optional runtime subagent config written to openclaw.json.plugins.entries.<plugin>.subagent.";
+      };
+    };
+  };
+  pluginSlotsOption = lib.mkOption {
+    type = lib.types.attrsOf lib.types.str;
+    default = { };
+    description = "Plugin slot assignments keyed by runtime slot name, e.g. memory or contextEngine.";
+  };
+  pluginsOptionType = lib.types.submodule {
+    freeformType = lib.types.attrsOf pluginOptionModule;
+    options = {
+      _slots = pluginSlotsOption;
+    };
+  };
   mkSkillOption = lib.types.submodule {
     options = {
       name = lib.mkOption {
@@ -137,44 +180,14 @@ in
       description = "Declarative skills installed into each instance workspace.";
     };
 
-    customPlugins = lib.mkOption {
-      type = lib.types.listOf (
-        lib.types.submodule {
-          options = {
-            source = lib.mkOption {
-              type = lib.types.str;
-              description = "Plugin source pointer (e.g., github:owner/repo or path:/...).";
-            };
-            config = lib.mkOption {
-              type = lib.types.attrs;
-              default = { };
-              description = "Plugin-specific configuration (env/files/etc).";
-            };
-          };
-        }
-      );
-      default = [ ];
-      description = "Custom/community plugins (merged with bundled plugin toggles).";
+    plugins = lib.mkOption {
+      type = pluginsOptionType;
+      default = { };
+      description = ''
+        Plugins keyed by plugin name under programs.openclaw.plugins.<name>.
+        Use programs.openclaw.plugins._slots for runtime slot assignments.
+      '';
     };
-
-    bundledPlugins =
-      lib.mapAttrs
-        (
-          name: plugin:
-          {
-            enable = lib.mkOption {
-              type = lib.types.bool;
-              default = plugin.defaultEnable or false;
-              description = "Enable the ${name} plugin (bundled).";
-            };
-            config = lib.mkOption {
-              type = lib.types.attrs;
-              default = { };
-              description = "Bundled plugin configuration passed through to ${name} (env/settings).";
-            };
-          }
-        )
-        pluginCatalog;
 
     launchd.enable = lib.mkOption {
       type = lib.types.bool;

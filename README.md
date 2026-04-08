@@ -91,7 +91,7 @@ You've probably installed tools before. Homebrew, pip, npm - they work until the
 - Every dependency pinned to exact versions. Forever.
 - Update breaks something? `home-manager switch --rollback` - back in 30 seconds.
 - Share your config file, get the exact same setup on another machine.
-- **Plugins just work.** Add a GitHub URL, run one command, done. Nix handles the build, dependencies, and wiring.
+- **Plugins just work.** Add a GitHub repo or npm package, run one command, done. Nix handles the build, dependencies, and wiring.
 - Tools don't pollute your system - they live in isolation.
 
 You don't need to learn Nix deeply. You describe what you want, Nix figures out how to build it.
@@ -233,8 +233,8 @@ When you enable a plugin, Nix installs the tools and wires up the skills to Open
 
 When you run `home-manager switch`:
 
-1. Nix reads your `flake.nix` and resolves all plugin sources (GitHub repos, local paths)
-2. For each plugin, Nix looks for a `openclawPlugin` output that declares:
+1. Nix reads your `flake.nix` and resolves all plugin packages (bundled helpers, GitHub fetchers, local paths)
+2. For each plugin package, Nix reads `passthru.openclawPlugin` metadata that declares:
    - What CLI packages to install
    - What skill files to copy
    - What environment variables it needs
@@ -254,29 +254,30 @@ All state lives in `~/.openclaw/`. Logs at `/tmp/openclaw/openclaw-gateway.log`.
 
 Plugins extend what OpenClaw can do. Each plugin bundles tools and teaches the AI how to use them.
 
-### Bundled plugins
+### Declaring plugins
 
-These ship with nix-openclaw. Catalog source of truth: `nix/modules/home-manager/openclaw/plugin-catalog.nix`.
-Toggle them in your config:
+Plugin-related config now lives under one tree: `programs.openclaw.plugins`.
 
 ```nix
-programs.openclaw.bundledPlugins = {
-  summarize.enable = true;   # Summarize web pages, PDFs, videos
-  peekaboo.enable = true;    # Take screenshots
-  poltergeist.enable = false; # Control your macOS UI
-  sag.enable = false;        # Text-to-speech
-  camsnap.enable = false;    # Camera snapshots
-  gogcli.enable = false;     # Google Calendar
-  goplaces.enable = true;    # Google Places API
-  bird.enable = false;       # Twitter/X
-  sonoscli.enable = false;   # Sonos control
-  imsg.enable = false;       # iMessage
-};
+programs.openclaw.plugins = {
+  _slots = {
+    memory = "summarize";
+  };
 
-# Optional config for bundled plugins
-programs.openclaw.bundledPlugins.goplaces = {
-  enable = true;
-  config.env.GOOGLE_PLACES_API_KEY = "/run/agenix/google-places-api-key";
+  summarize = {
+    package = pkgs.mkOpenclawPlugin {
+      name = "summarize";
+      src = ./plugins/summarize;
+    };
+  };
+
+  goplaces = {
+    package = pkgs.mkOpenclawPlugin {
+      name = "goplaces";
+      src = ./plugins/goplaces;
+    };
+    env.GOOGLE_PLACES_API_KEY = "/run/agenix/google-places-api-key";
+  };
 };
 ```
 
@@ -295,15 +296,112 @@ programs.openclaw.bundledPlugins.goplaces = {
 
 ### Adding community plugins
 
-Tell your agent: *"Add the plugin from github:owner/repo-name"*
+There are now two supported packaging paths:
 
-Or add it manually to your config:
+1. `pkgs.mkOpenclawPlugin` for a plugin repo or local directory
+2. `pkgs.mkOpenclawNpmPlugin` for a plugin published on npm
+
+Tell your agent: "Package the plugin with `pkgs.mkOpenclawPlugin` or `pkgs.mkOpenclawNpmPlugin` and add it to `programs.openclaw.plugins.<name>`."
+
+#### From a GitHub repo
 
 ```nix
-customPlugins = [
-  { source = "github:owner/repo-name"; }
-];
+programs.openclaw.plugins.repo-name = {
+  package = pkgs.mkOpenclawPlugin {
+    name = "repo-name";
+    src = pkgs.fetchFromGitHub {
+      owner = "owner";
+      repo = "repo-name";
+      rev = "<commit-or-tag>";
+      hash = "sha256-...";
+    };
+  };
+};
 ```
+
+#### From a local directory
+
+```nix
+programs.openclaw.plugins.repo-name = {
+  package = pkgs.mkOpenclawPlugin {
+    name = "repo-name";
+    src = ./path/to/repo-name;
+  };
+};
+```
+
+#### From npm
+
+Use `pkgs.mkOpenclawNpmPlugin` when the plugin is published as an npm package and contains its own `package.json` with an `openclaw` field.
+
+You need four inputs:
+- `packageName`: npm package name, including scope if any
+- `version`: exact npm version to install
+- `packageLock`: a `package-lock.json` that pins the full dependency tree for a tiny bundle project that depends on that plugin
+- `npmDepsHash`: the fixed-output hash for that lockfile, discovered once and then committed
+
+Example:
+
+```nix
+let
+  myPluginLock = pkgs.writeText "my-plugin-package-lock.json" ''
+    {
+      "name": "my-plugin-bundle",
+      "version": "0.0.1",
+      "lockfileVersion": 3,
+      "requires": true,
+      "packages": {
+        "": {
+          "name": "my-plugin-bundle",
+          "version": "0.0.1",
+          "dependencies": {
+            "@acme/openclaw-plugin": "1.2.3"
+          }
+        },
+        "node_modules/@acme/openclaw-plugin": {
+          "version": "1.2.3",
+          "resolved": "https://registry.npmjs.org/@acme/openclaw-plugin/-/openclaw-plugin-1.2.3.tgz",
+          "integrity": "sha512-REPLACE_ME"
+        }
+      }
+    }
+  '';
+in
+{
+  programs.openclaw.plugins.acme = {
+    package = pkgs.mkOpenclawNpmPlugin {
+      packageName = "@acme/openclaw-plugin";
+      version = "1.2.3";
+      pname = "acme-openclaw-plugin";
+      packageLock = myPluginLock;
+      npmDepsHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    };
+  };
+}
+```
+
+What this helper does:
+- creates a tiny npm bundle project that depends on your plugin package
+- installs the dependency tree with `buildNpmPackage`
+- copies the plugin itself to the output root
+- copies runtime dependencies to `$out/node_modules`
+- removes the plugin package from `$out/node_modules` so the final output is a clean OpenClaw extension tree
+
+How to get `package-lock.json` and `npmDepsHash`:
+
+1. Create a temporary directory with a minimal `package.json` that depends only on your plugin.
+2. Run `npm install --package-lock-only` there to generate `package-lock.json`.
+3. Copy the resulting lockfile into your Nix config or repo.
+4. Set `npmDepsHash = lib.fakeHash;` for the first build.
+5. Run `home-manager switch` or `nix build` once.
+6. Nix will fail with the real hash. Copy that value into `npmDepsHash`.
+7. Re-run the build.
+
+Notes:
+- Use exact versions, not ranges.
+- Commit the lockfile and hash together.
+- If the npm package has postinstall scripts, native builds, or an incomplete lockfile, fix that upstream or vendor the plugin repo and package it with `pkgs.mkOpenclawPlugin` instead.
+- The packaged npm plugin must contain a `package.json` at its root. If it does not declare an `openclaw` field, nix-openclaw will still package it but emits a warning during the build.
 
 Then run `home-manager switch` to install.
 
@@ -313,60 +411,64 @@ Some plugins need settings (auth files, preferences). Here's a simplified exampl
 
 ```nix
 # Example: a padel court booking plugin (simplified for illustration)
-customPlugins = [
-  {
-    source = "github:example/padel-cli";
-    config = {
-      env = {
-        PADEL_AUTH_FILE = "~/.secrets/padel-auth";  # where your login token lives
-      };
-      settings = {
-        default_city = "Barcelona";
-        preferred_times = [ "18:00" "20:00" ];
-      };
+programs.openclaw.plugins.padel-cli = {
+  package = pkgs.mkOpenclawPlugin {
+    name = "padel-cli";
+    src = pkgs.fetchFromGitHub {
+      owner = "example";
+      repo = "padel-cli";
+      rev = "<commit-or-tag>";
+      hash = "sha256-...";
     };
-  }
-];
+  };
+  env = {
+    PADEL_AUTH_FILE="***";  # where your login token lives
+  };
+  settings = {
+    default_city = "Barcelona";
+    preferred_times = [ "18:00" "20:00" ];
+  };
+};
 ```
 
-- `config.env` - paths to secrets/auth files the plugin needs
-- `config.settings` - preferences (rendered to `config.json` for the plugin)
+- `env` - paths to secrets/auth files the plugin needs
+- `settings` - preferences (rendered to `openclaw.json.plugins.entries.<plugin>.config`, and mirrored to `config.json` when the plugin declares a `stateDir`)
 
 <details>
 <summary><strong>For plugin developers</strong></summary>
 
-Want to make your tool available as a OpenClaw plugin? Here's the contract.
+Want to make your tool available as an OpenClaw plugin? If you control the repo, package it with `pkgs.mkOpenclawPlugin` and attach the plugin contract as metadata. If you only publish to npm, consumers can package it with `pkgs.mkOpenclawNpmPlugin`.
 
 **Minimum structure:**
 
 ```
 your-plugin/
-  flake.nix          # Declares the plugin
   skills/
     your-skill/
       SKILL.md       # Instructions for the AI
 ```
 
-**Your `flake.nix` must export `openclawPlugin`:**
+**Package it with `pkgs.mkOpenclawPlugin`:**
 
 ```nix
-{
-  outputs = { self, nixpkgs, ... }:
-    let
-      pkgs = import nixpkgs { system = builtins.currentSystem; };
-    in {
-      openclawPlugin = {
-        name = "hello-world";
-        skills = [ ./skills/hello-world ];
-        packages = [ pkgs.hello ]; # CLI tools to install
-        needs = {
-          stateDirs = [];          # Directories to create (relative to ~)
-          requiredEnv = [];        # Required environment variables
-        };
-      };
+let
+  plugin = pkgs.mkOpenclawPlugin {
+    name = "hello-world";
+    src = ./.;
+    skills = [ ./skills/hello-world ];
+    packages = [ pkgs.hello ]; # CLI tools to install
+    needs = {
+      stateDirs = [];          # Directories to create (relative to ~)
+      requiredEnv = [];        # Required environment variables
     };
+  };
+in
+{
+  # expose or reuse `plugin` however your flake/module wants
 }
 ```
+
+`pkgs.mkOpenclawPlugin` stores the contract in `passthru.openclawPlugin`, which nix-openclaw reads during activation.
 
 **Your `SKILL.md` teaches the AI:**
 
@@ -389,15 +491,17 @@ See `examples/hello-world-plugin` for a complete working example.
 Goal: Make this repo a nix-openclaw-native plugin with the standard contract.
 
 Contract to implement:
-1) Add openclawPlugin output in flake.nix:
+1) Package the plugin with `pkgs.mkOpenclawPlugin`:
    - name
+   - src
    - skills (paths to SKILL.md dirs)
    - packages (CLI packages to put on PATH)
    - needs (stateDirs + requiredEnv)
 
 Example:
-openclawPlugin = {
+plugin = pkgs.mkOpenclawPlugin {
   name = "my-plugin";
+  src = ./.;
   skills = [ ./skills/my-plugin ];
   packages = [ self.packages.${system}.default ];
   needs = {
@@ -419,28 +523,32 @@ openclawPlugin = {
 
 Standard plugin config shape (Nix-native, no JSON strings):
 
-plugins = [
-  {
-    source = "github:owner/my-plugin";
-    config = {
-      env = {
-        MYPLUGIN_AUTH_FILE = "/run/agenix/myplugin-auth";
-      };
-      settings = {
-        name = "EXAMPLE_NAME";
-        enabled = true;
-        retries = 3;
-        tags = [ "alpha" "beta" ];
-        window = { start = "08:00"; end = "18:00"; };
-        options = { mode = "fast"; level = 2; };
-      };
+programs.openclaw.plugins.my-plugin = {
+  package = pkgs.mkOpenclawPlugin {
+    name = "my-plugin";
+    src = pkgs.fetchFromGitHub {
+      owner = "owner";
+      repo = "my-plugin";
+      rev = "<commit-or-tag>";
+      hash = "sha256-...";
     };
-  }
-];
+  };
+  env = {
+    MYPLUGIN_AUTH_FILE="***";
+  };
+  settings = {
+    name = "EXAMPLE_NAME";
+    enabled = true;
+    retries = 3;
+    tags = [ "alpha" "beta" ];
+    window = { start = "08:00"; end = "18:00"; };
+    options = { mode = "fast"; level = 2; };
+  };
+};
 
 Config flags the host will use:
-- `config.env` for required env vars (e.g., MYPLUGIN_AUTH_FILE)
-- `config.settings` for typed config keys (rendered to config.json in the first stateDir)
+- `env` for required env vars (e.g., MYPLUGIN_AUTH_FILE)
+- `settings` for typed config keys (rendered to `openclaw.json.plugins.entries.<plugin>.config`, and also written to `config.json` in the first stateDir when one exists)
 
 CI note:
 - If the repo uses Garnix, add the plugin build to its `garnix.yaml` (or equivalent) so CI verifies it.
@@ -490,10 +598,12 @@ The simplest setup:
       };
     };
 
-    # Built-ins (tools + skills) shipped via nix-steipete-tools.
-    plugins = [
-      { source = "github:openclaw/nix-steipete-tools?dir=tools/summarize"; }
-    ];
+    plugins.summarize = {
+      package = pkgs.mkOpenclawPlugin {
+        name = "summarize";
+        src = ./plugins/summarize;
+      };
+    };
   };
 }
 ```
@@ -538,32 +648,59 @@ Uses `instances.default` to unlock per-group mention rules. If `instances` is se
       workspaceDir = "~/.openclaw/workspace";
       launchd.enable = true;
 
-      # Plugins (prod: pinned GitHub). Built-ins are via nix-steipete-tools.
-      # MVP target: repo pointers resolve to tools + skills automatically.
-      plugins = [
-        { source = "github:openclaw/nix-steipete-tools?dir=tools/peekaboo"; }
-        { source = "github:joshp123/xuezh"; }
-        {
-          source = "github:joshp123/padel-cli";
-          config = {
-            env = { PADEL_AUTH_FILE = "/run/agenix/padel-auth"; };
-            settings = {
-              default_location = "CITY_NAME";
-              preferred_times = [ "18:00" "20:00" ];
-              preferred_duration = 90;
-              venues = [
-                {
-                  id = "VENUE_ID";
-                  alias = "VENUE_ALIAS";
-                  name = "VENUE_NAME";
-                  indoor = true;
-                  timezone = "TIMEZONE";
-                }
-              ];
-            };
+      plugins._slots.memory = "peekaboo";
+      plugins.peekaboo = {
+        package = pkgs.mkOpenclawPlugin {
+          name = "peekaboo";
+          src = builtins.fetchTree {
+            type = "github";
+            owner = "openclaw";
+            repo = "nix-steipete-tools";
+            dir = "tools/peekaboo";
+            rev = "<pinned-rev>";
+            narHash = "sha256-...";
           };
-        }
-      ];
+        };
+      };
+      plugins.xuezh = {
+        package = pkgs.mkOpenclawPlugin {
+          name = "xuezh";
+          src = pkgs.fetchFromGitHub {
+            owner = "joshp123";
+            repo = "xuezh";
+            rev = "<commit-or-tag>";
+            hash = "sha256-...";
+          };
+        };
+      };
+      plugins.padel-cli = {
+        package = pkgs.mkOpenclawPlugin {
+          name = "padel-cli";
+          src = pkgs.fetchFromGitHub {
+            owner = "joshp123";
+            repo = "padel-cli";
+            rev = "<commit-or-tag>";
+            hash = "sha256-...";
+          };
+        };
+        config = {
+          env = { PADEL_AUTH_FILE="***"; };
+          settings = {
+            default_location = "CITY_NAME";
+            preferred_times = [ "18:00" "20:00" ];
+            preferred_duration = 90;
+            venues = [
+              {
+                id = "VENUE_ID";
+                alias = "VENUE_ALIAS";
+                name = "VENUE_NAME";
+                indoor = true;
+                timezone = "TIMEZONE";
+              }
+            ];
+          };
+        };
+      };
     };
   };
 }
@@ -601,7 +738,17 @@ let
     # Prod gateway pin (comes from nix-openclaw input @ v0.1.0 above).
     package = inputs.nix-openclaw.packages.${pkgs.system}.openclaw-gateway;
     config = prodConfig;
-    plugins = [ { source = "github:owner/your-plugin"; } ];
+    plugins.your-plugin = {
+      package = pkgs.mkOpenclawPlugin {
+        name = "your-plugin";
+        src = pkgs.fetchFromGitHub {
+          owner = "owner";
+          repo = "your-plugin";
+          rev = "<commit-or-tag>";
+          hash = "sha256-...";
+        };
+      };
+    };
   };
 in {
   # Pinned macOS app (POC: no local app builds, uses nix-openclaw @ v0.1.0 above).
@@ -617,13 +764,26 @@ in {
       gatewayPort = 18790;
       # Local gateway checkout (path). App stays pinned.
       gatewayPath = "/Users/you/code/openclaw";
-      # Local plugin overrides prod if names collide (last wins).
-      plugins = prod.plugins ++ [
-        { source = "path:/Users/you/code/your-plugin"; }
-        {
-          source = "github:joshp123/padel-cli";
+      # Local plugin overrides prod if names collide.
+      plugins = prod.plugins // {
+        your-plugin = {
+          package = pkgs.mkOpenclawPlugin {
+            name = "your-plugin";
+            src = /Users/you/code/your-plugin;
+          };
+        };
+        padel-cli = {
+          package = pkgs.mkOpenclawPlugin {
+            name = "padel-cli";
+            src = pkgs.fetchFromGitHub {
+              owner = "joshp123";
+              repo = "padel-cli";
+              rev = "<commit-or-tag>";
+              hash = "sha256-...";
+            };
+          };
           config = {
-            env = { PADEL_AUTH_FILE = "/run/agenix/padel-auth-dev"; };
+            env = { PADEL_AUTH_FILE="***"; };
             settings = {
               default_location = "CITY_NAME";
               preferred_times = [ "18:00" ];
@@ -631,8 +791,8 @@ in {
               venues = [];
             };
           };
-        }
-      ];
+        };
+      };
     };
   };
 }

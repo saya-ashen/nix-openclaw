@@ -212,12 +212,37 @@ nix-openclaw is a **plugin installer** that wires plugins into openclaw's plugin
 ```nix
 # User's flake.nix
 programs.openclaw.customPlugins = [
-  # Remote: point at GitHub repo
-  { source = "github:joshp123/xuezh"; }
-  { source = "github:joshp123/padel-cli"; }
+  # Remote: package a GitHub repo explicitly
+  {
+    package = pkgs.mkOpenclawPlugin {
+      name = "xuezh";
+      src = pkgs.fetchFromGitHub {
+        owner = "joshp123";
+        repo = "xuezh";
+        rev = "<commit-or-tag>";
+        hash = "sha256-...";
+      };
+    };
+  }
+  {
+    package = pkgs.mkOpenclawPlugin {
+      name = "padel-cli";
+      src = pkgs.fetchFromGitHub {
+        owner = "joshp123";
+        repo = "padel-cli";
+        rev = "<commit-or-tag>";
+        hash = "sha256-...";
+      };
+    };
+  }
 
-  # Local dev: point at directory
-  { source = "path:/Users/josh/code/my-plugin"; }
+  # Local dev: point at a directory
+  {
+    package = pkgs.mkOpenclawPlugin {
+      name = "my-plugin";
+      src = /Users/josh/code/my-plugin;
+    };
+  }
 ];
 
 # Or enable bundled plugins (pinned in nix-openclaw):
@@ -225,13 +250,13 @@ programs.openclaw.bundledPlugins.summarize.enable = true;
 programs.openclaw.bundledPlugins.oracle.enable = true;
 ```
 
-**Same contract, multiple sources:**
-- `github:owner/repo` — pull from GitHub, pin to commit
-- `path:/local/dir` — local checkout for dev iteration
+**Same contract, multiple packaging inputs:**
+- `pkgs.fetchFromGitHub` — pull from GitHub, pin to commit
+- local path `src = /local/dir` — local checkout for dev iteration
 - First-party toggles — curated plugins pinned in nix-openclaw
 
 At activation time, nix-openclaw:
-1. Resolves flake sources (remote or local) → builds binaries
+1. Resolves plugin packages (remote or local) → builds binaries
 2. Validates `requiredEnv` (fails if missing)
 3. Creates state dirs
 4. Installs plugins to `~/.openclaw/extensions/<plugin>/`

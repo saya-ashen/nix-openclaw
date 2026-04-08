@@ -1,6 +1,5 @@
 {
   pkgs,
-  sourceInfo ? import ../sources/openclaw-source.nix,
   steipetePkgs ? { },
   toolNamesOverride ? null,
   excludeToolNames ? [ ],
@@ -12,10 +11,7 @@ let
     steipetePkgs = steipetePkgs;
     inherit toolNamesOverride excludeToolNames;
   };
-  openclawGateway = pkgs.callPackage ./openclaw-gateway.nix {
-    inherit sourceInfo;
-    pnpmDepsHash = sourceInfo.pnpmDepsHash or null;
-  };
+  openclawGateway = pkgs.callPackage ./openclaw-gateway.nix { };
   openclawApp = if isDarwin then pkgs.callPackage ./openclaw-app.nix { } else null;
   openclawTools = pkgs.buildEnv {
     name = "openclaw-tools";
@@ -27,10 +23,16 @@ let
     openclaw-app = openclawApp;
     extendedTools = toolSets.tools;
   };
+  openclawPluginLib = import ../lib/openclaw-plugin.nix {
+    lib = pkgs.lib;
+    inherit pkgs;
+    inherit (pkgs) stdenvNoCC;
+  };
 in
 {
   openclaw-gateway = openclawGateway;
   openclaw = openclawBundle;
   openclaw-tools = openclawTools;
+  inherit (openclawPluginLib) mkOpenclawPlugin mkOpenclawNpmPlugin;
 }
 // (if isDarwin then { openclaw-app = openclawApp; } else { })

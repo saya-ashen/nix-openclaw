@@ -24,7 +24,7 @@ let
     envFile = cfg.envFile;
     launchd = cfg.launchd;
     systemd = cfg.systemd;
-    plugins = openclawLib.effectivePlugins;
+    plugins = { };
     config = { };
     appDefaults = {
       enable = true;
@@ -99,9 +99,14 @@ let
           inst.package;
       pluginPackages = plugins.pluginPackagesFor name;
       pluginEnvAll = plugins.pluginEnvAllFor name;
+      pluginRuntimeConfig = plugins.pluginRuntimeConfigFor name;
       envFile = inst.envFile;
       mergedConfig0 = stripNulls (
-        lib.recursiveUpdate (lib.recursiveUpdate baseConfig cfg.config) inst.config
+        lib.recursiveUpdate
+          (lib.recursiveUpdate
+            (lib.recursiveUpdate baseConfig cfg.config)
+            inst.config)
+          pluginRuntimeConfig
       );
       existingWorkspace = (((mergedConfig0.agents or { }).defaults or { }).workspace or null);
       mergedConfig =
@@ -221,6 +226,12 @@ let
               OPENCLAW_STATE_DIR = inst.stateDir;
               OPENCLAW_IMAGE_BACKEND = "sips";
               OPENCLAW_NIX_MODE = "1";
+
+              # Backward-compatible env names for gateway builds that still read legacy names.
+              CLAWDBOT_CONFIG_PATH = inst.configPath;
+              CLAWDBOT_STATE_DIR = inst.stateDir;
+              CLAWDBOT_IMAGE_BACKEND = "sips";
+              CLAWDBOT_NIX_MODE = "1";
             } // lib.optionalAttrs (envFile != null) {
               OPENCLAW_ENV_FILE = envFile;
             };
@@ -243,6 +254,9 @@ let
               "OPENCLAW_CONFIG_PATH=${inst.configPath}"
               "OPENCLAW_STATE_DIR=${inst.stateDir}"
               "OPENCLAW_NIX_MODE=1"
+              "CLAWDBOT_CONFIG_PATH=${inst.configPath}"
+              "CLAWDBOT_STATE_DIR=${inst.stateDir}"
+              "CLAWDBOT_NIX_MODE=1"
             ] ++ lib.optional (envFile != null) "OPENCLAW_ENV_FILE=${envFile}";
             StandardOutput = "append:${inst.logPath}";
             StandardError = "append:${inst.logPath}";
@@ -292,6 +306,7 @@ in
       (lib.listToAttrs appInstalls)
       (lib.optionalAttrs cfg.manageDocuments files.documentsFiles)
       (lib.optionalAttrs cfg.manageDocuments files.skillFiles)
+      (lib.optionalAttrs cfg.manageDocuments plugins.pluginSkillsFiles)
       plugins.pluginConfigFiles
       (lib.optionalAttrs cfg.reloadScript.enable {
         ".local/bin/openclaw-reload" = {
@@ -325,6 +340,15 @@ in
       )}
     '';
 
+    home.activation.openclawPluginExtensions = lib.hm.dag.entryAfter [ "openclawDirs" ] ''
+      ${lib.concatStringsSep "\n" (
+        map (
+          item:
+            "run --quiet ${lib.getExe pkgs.bash} ${../openclaw-plugin-install.sh} ${lib.escapeShellArg item.source} ${lib.escapeShellArg item.target}"
+        ) plugins.pluginExtensionInstalls
+      )}
+    '';
+
     home.activation.openclawPluginGuard = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       set -euo pipefail
       ${plugins.pluginGuards}
@@ -342,6 +366,17 @@ in
               lib.boolToString (appDefaults.attachExistingOnly or true)
             }
             /usr/bin/defaults write ai.openclaw.mac gatewayPort -int ${
+              toString (appDefaults.gatewayPort or 18789)
+            }
+
+            # Backward-compatible defaults domain/keys for app builds that still read legacy names.
+            /usr/bin/defaults write com.steipete.Clawdbot clawdbot.nixMode -bool ${
+              lib.boolToString (appDefaults.nixMode or true)
+            }
+            /usr/bin/defaults write com.steipete.Clawdbot clawdbot.gateway.attachExistingOnly -bool ${
+              lib.boolToString (appDefaults.attachExistingOnly or true)
+            }
+            /usr/bin/defaults write com.steipete.Clawdbot gatewayPort -int ${
               toString (appDefaults.gatewayPort or 18789)
             }
           ''

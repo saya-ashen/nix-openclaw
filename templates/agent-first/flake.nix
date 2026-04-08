@@ -66,10 +66,18 @@
 
               instances.default = {
                 enable = true;
-                plugins = [
+                plugins.hello-world = {
                   # Example plugin without config:
-                  { source = "github:acme/hello-world"; }
-                ];
+                  package = pkgs.mkOpenclawPlugin {
+                    name = "hello-world";
+                    src = pkgs.fetchFromGitHub {
+                      owner = "acme";
+                      repo = "hello-world";
+                      rev = "<commit-or-tag>";
+                      hash = "sha256-...";
+                    };
+                  };
+                };
               };
             };
           }
