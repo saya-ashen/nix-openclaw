@@ -58,7 +58,7 @@ Bot: *runs whisper, sends you text*
 
 You talk to Telegram, your machine does things.
 
-**One flake, everything works.** Gateway + tools everywhere; macOS app on macOS.
+**One flake, simple defaults.** Use nixpkgs `pkgs.openclaw` by default; keep plugin/tool wiring declarative.
 
 **Plugins are self-contained.** Each plugin declares its CLI tools in Nix. You enable it, the build and wiring happens automatically.
 
@@ -119,7 +119,7 @@ Nix is a **declarative package manager**. Instead of running commands to install
 
 ## Quick Start
 
-### Option 1: Let your agent set it up (recommended)
+### Option 1: Let your agent set it up (recommended, homelab-first)
 
 Copy this entire block and paste it to Claude, Cursor, or your preferred AI assistant:
 
@@ -139,7 +139,7 @@ What I need you to do:
 3. Create a docs dir next to the config (e.g., ~/code/openclaw-local/documents) with AGENTS.md, SOUL.md, TOOLS.md (optional: IDENTITY.md, USER.md, LORE.md, HEARTBEAT.md, PROMPTING-EXAMPLES.md)
    - If ~/.openclaw/workspace already has these files, adopt them into the documents dir first (use copy/rsync that dereferences symlinks, e.g. `cp -L`)
 4. Help me create a Telegram bot (@BotFather) and get my chat ID (@userinfobot)
-5. Set up secrets (bot token, Anthropic key) - plain files at ~/.secrets/ is fine
+5. Set up secrets using sops-nix (preferred for homelab): gateway token, Telegram bot token, Anthropic API key
 6. Fill in the template placeholders and run home-manager switch
 7. Verify: service running, bot responds to messages
 
@@ -196,8 +196,8 @@ Your agent will install Nix, create your config, and get OpenClaw running. You j
 3. Edit `flake.nix` placeholders:
    - `system` = `x86_64-linux`
    - `home.username` and `home.homeDirectory` (e.g., `/home/<user>`)
-   - `programs.openclaw.documents` with `AGENTS.md`, `SOUL.md`, `TOOLS.md` (optional: `IDENTITY.md`, `USER.md`, `LORE.md`, `HEARTBEAT.md`, `PROMPTING-EXAMPLES.md`)
-   - Provider secrets (Telegram/Discord tokens, Anthropic API key)
+   - by default, `manageDocuments = false` (keep AGENTS.md / SOUL.md / TOOLS.md outside Nix)
+   - Provider secrets via sops-nix (`tokenFile` / `apiKeyFile`)
 4. Apply:
    ```bash
    home-manager switch --flake .#<user>
@@ -242,7 +242,7 @@ When you run `home-manager switch`:
 4. A launchd (macOS) or systemd user service (Linux) is created/updated to run the gateway
 5. The gateway starts, loads skills, connects to your providers
 
-All state lives in `~/.openclaw/`. Logs at `/tmp/openclaw/openclaw-gateway.log`.
+All state lives in `~/.openclaw/` (or `~/.openclaw-<name>` for named instances). Logs at `/tmp/openclaw/openclaw-gateway.log`.
 
 </details>
 
@@ -802,11 +802,10 @@ in {
 
 Plugins are keyed by their declared `name`. If two plugins declare the same name, the **last entry wins** (use this to override a prod plugin with a local dev one).
 
-### Tool overrides (avoid collisions)
+### Tool overrides (legacy / optional)
 
-Home Manager auto-excludes `git` when `programs.git.enable = true`.
-
-Drop built-in tools that you already install elsewhere:
+For homelab setups, prefer a plain `pkgs.openclaw` package plus declarative plugins.
+If you already rely on tool override behavior, the old knobs still exist:
 
 ```nix
 programs.openclaw.excludeTools = [ "git" "jq" "ripgrep" ];

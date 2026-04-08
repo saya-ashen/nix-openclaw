@@ -11,7 +11,6 @@ let
   cfg = openclawLib.cfg;
   resolvePath = openclawLib.resolvePath;
   toRelative = openclawLib.toRelative;
-  toolSets = openclawLib.toolSets;
   documentsEnabled = cfg.documents != null;
   instanceWorkspaceDirs = map (inst: resolvePath inst.workspaceDir) (lib.attrValues enabledInstances);
 
@@ -163,7 +162,6 @@ let
   toolsReport =
     if documentsEnabled then
       let
-        toolNames = toolSets.toolNames or [ ];
         renderPkgName = pkg: if pkg ? pname then pkg.pname else lib.getName pkg;
         renderPlugin =
           plugin:
@@ -186,13 +184,6 @@ let
         reportLines = [
           "<!-- BEGIN NIX-REPORT -->"
           ""
-          "## Nix-managed tools"
-          ""
-          "### Built-in toolchain"
-        ]
-        ++ (if toolNames == [ ] then [ "- (none)" ] else map (name: "- " + name) toolNames)
-        ++ [
-          ""
           "## Nix-managed plugin report"
           ""
           "Plugins enabled per instance (last-wins on name collisions):"
@@ -200,7 +191,7 @@ let
         ++ lib.concatLists (lib.mapAttrsToList pluginLinesFor enabledInstances)
         ++ [
           ""
-          "Tools: batteries-included toolchain + plugin-provided CLIs."
+          "Tools: plugin-provided CLIs are added declaratively via enabled plugins."
           ""
           "<!-- END NIX-REPORT -->"
         ];

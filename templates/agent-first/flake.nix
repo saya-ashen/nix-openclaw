@@ -1,11 +1,13 @@
 {
-  description = "OpenClaw local";
+  description = "OpenClaw local (homelab-first)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-openclaw.url = "github:openclaw/nix-openclaw";
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -14,9 +16,10 @@
       nixpkgs,
       home-manager,
       nix-openclaw,
+      sops-nix,
     }:
     let
-      # REPLACE: aarch64-darwin (Apple Silicon) or x86_64-linux
+      # REPLACE: x86_64-linux (recommended for homelab) or aarch64-linux
       system = "<system>";
       pkgs = import nixpkgs {
         inherit system;
@@ -29,45 +32,54 @@
         inherit pkgs;
         modules = [
           nix-openclaw.homeManagerModules.openclaw
+          sops-nix.homeManagerModules.sops
           {
             # Required for Home Manager standalone
             home.username = "<user>";
-            # REPLACE: /Users/<user> on macOS or /home/<user> on Linux
+            # REPLACE: /home/<user>
             home.homeDirectory = "<homeDir>";
             home.stateVersion = "24.11";
             programs.home-manager.enable = true;
 
-            programs.openclaw = {
-              # REPLACE: path to your managed documents directory
-              documents = ./documents;
+            # Secrets are declared here and materialized by sops-nix.
+            sops = {
+              defaultSopsFile = ./secrets.yaml;
+              age.keyFile = "<ageKeyPath>";
 
-              # Schema-typed OpenClaw config (from upstream)
+              secrets = {
+                openclaw-gateway-token = { };
+                telegram-bot-token = { };
+                anthropic-api-key = { };
+              };
+            };
+
+            programs.openclaw = {
+              # Homelab default: keep AGENTS.md / SOUL.md / TOOLS.md outside Nix.
+              manageDocuments = false;
+
+              # Default package path: consume pkgs.openclaw from nixpkgs / overlay.
+              package = pkgs.openclaw;
+
               config = {
                 gateway = {
                   mode = "local";
-                  auth = {
-                    # REPLACE: long random token for gateway auth
-                    token = "<gatewayToken>";
-                  };
+                  auth.tokenFile = config.sops.secrets.openclaw-gateway-token.path;
                 };
 
+                providers.anthropic.apiKeyFile = config.sops.secrets.anthropic-api-key.path;
+
                 channels.telegram = {
-                  # REPLACE: path to your bot token file
-                  tokenFile = "<tokenPath>";
-                  # REPLACE: your Telegram user ID (get from @userinfobot)
+                  tokenFile = config.sops.secrets.telegram-bot-token.path;
                   allowFrom = [ <allowFrom> ];
-                  groups = {
-                    "*" = {
-                      requireMention = true;
-                    };
-                  };
+                  groups."*".requireMention = true;
                 };
               };
 
+              # Keep the main path simple: one declared instance, declarative plugins.
               instances.default = {
                 enable = true;
+
                 plugins.hello-world = {
-                  # Example plugin without config:
                   package = pkgs.mkOpenclawPlugin {
                     name = "hello-world";
                     src = pkgs.fetchFromGitHub {
@@ -78,6 +90,12 @@
                     };
                   };
                 };
+
+                # Example of plugin secrets via sops-managed files:
+                # plugins.some-plugin = {
+                #   package = pkgs.mkOpenclawPlugin { ... };
+                #   env.SOME_PLUGIN_TOKEN_FILE = config.sops.secrets.some-plugin-token.path;
+                # };
               };
             };
           }

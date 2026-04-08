@@ -5,18 +5,7 @@
 }: let
   cfg = config.programs.openclaw;
   homeDir = config.home.homeDirectory;
-  autoExcludeTools = lib.optionals config.programs.git.enable ["git"];
-  effectiveExcludeTools = lib.unique (cfg.excludeTools ++ autoExcludeTools);
-  toolOverrides = {
-    toolNamesOverride = cfg.toolNames;
-    excludeToolNames = effectiveExcludeTools;
-  };
-  toolOverridesEnabled = cfg.toolNames != null || effectiveExcludeTools != [];
-  toolSets = import ../../../tools/extended.nix ({inherit pkgs;} // toolOverrides);
-  defaultPackage =
-    if toolOverridesEnabled && cfg.package == pkgs.openclaw
-    then (pkgs.openclawPackages.withTools toolOverrides).openclaw
-    else cfg.package;
+  defaultPackage = cfg.package;
   appPackage =
     if cfg.appPackage != null
     then cfg.appPackage
@@ -36,9 +25,6 @@ in {
   inherit
     cfg
     homeDir
-    toolOverrides
-    toolOverridesEnabled
-    toolSets
     defaultPackage
     appPackage
     generatedConfigOptions
