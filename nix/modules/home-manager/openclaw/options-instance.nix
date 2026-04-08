@@ -10,7 +10,10 @@ let
         description = "Optional package override for this plugin instance.";
       };
       env = lib.mkOption {
-        type = lib.types.attrs;
+        type = lib.types.attrsOf (lib.types.oneOf [
+          lib.types.str
+          lib.types.path
+        ]);
         default = { };
         description = "Plugin environment overrides exported into the gateway wrapper.";
       };

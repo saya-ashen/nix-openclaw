@@ -8,7 +8,8 @@
   toRelative = openclawLib.toRelative;
   cfg = openclawLib.cfg;
 
-  pluginBaseDir = resolvePath "~/.openclaw";
+  pluginBaseDirFor = instName:
+    resolvePath (if instName == "default" then "~/.openclaw" else "~/.openclaw-${instName}");
 
   splitPluginAttrs = attrs: {
     slots = attrs._slots or { };
@@ -63,21 +64,17 @@
   concretePluginEntriesFor = instName:
     lib.filterAttrs (_: plugin: (plugin.package or null) != null) (mergedPluginEntriesFor instName);
 
-  resolvePlugin = pluginName: plugin: let
+  resolvePlugin = instName: pluginName: plugin: let
     pluginPackage = plugin.package;
     pluginMeta = pluginPackage.passthru.openclawPlugin or (throw "OpenClaw plugin package ${lib.getName pluginPackage} is missing passthru.openclawPlugin");
     needs = pluginMeta.needs or {};
-    extensionTarget = "${pluginBaseDir}/extensions/${pluginMeta.name}";
+    extensionTarget = "${pluginBaseDirFor instName}/extensions/${pluginMeta.name}";
   in {
     package = pluginPackage;
     name = pluginMeta.name;
     configuredName = pluginName;
     extensionTarget = extensionTarget;
     extensionSource = pluginPackage;
-    source =
-      if plugin ? source
-      then toString plugin.source
-      else lib.getName pluginPackage;
     skills = pluginMeta.skills or [];
     packages = pluginMeta.packages or [];
     needs = {
@@ -94,7 +91,7 @@
   resolvedPluginsByInstance =
     lib.mapAttrs (
       instName: inst: let
-        resolved = lib.mapAttrsToList resolvePlugin (concretePluginEntriesFor instName);
+        resolved = lib.mapAttrsToList (resolvePlugin instName) (concretePluginEntriesFor instName);
         counts = lib.foldl' (acc: p: acc // {"${p.name}" = (acc.${p.name} or 0) + 1;}) {} resolved;
         duplicates = lib.attrNames (lib.filterAttrs (_: v: v > 1) counts);
         byName = lib.foldl' (acc: p: acc // {"${p.name}" = p;}) {} resolved;

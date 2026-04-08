@@ -15,7 +15,10 @@ let
         description = "Packaged OpenClaw plugin derivation created with pkgs.mkOpenclawPlugin or pkgs.mkOpenclawNpmPlugin.";
       };
       env = lib.mkOption {
-        type = lib.types.attrs;
+        type = lib.types.attrsOf (lib.types.oneOf [
+          lib.types.str
+          lib.types.path
+        ]);
         default = { };
         description = "Plugin environment values exported into the gateway wrapper.";
       };

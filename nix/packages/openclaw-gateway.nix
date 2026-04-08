@@ -9,7 +9,6 @@
   nodejs_22,
   makeWrapper,
   versionCheckHook,
-  # rolldown ? null,
   installShellFiles,
   gatewaySrc ? null,
   version ?
@@ -45,8 +44,6 @@ in {
     fetcherVersion = 3;
     hash = finalAttrs.pnpmDepsHash;
   };
-
-  # buildInputs = lib.optional (rolldown != null) rolldown;
 
   nativeBuildInputs = [
     pnpmConfigHook
@@ -88,7 +85,6 @@ in {
 
     libdir=$out/lib/openclaw
     mkdir -p $libdir $out/bin
-
 
     cp --reflink=auto -r package.json dist node_modules $libdir/
     cp --reflink=auto -r assets docs skills patches extensions $libdir/
@@ -154,8 +150,5 @@ in {
       mkg20001
     ];
     platforms = with lib.platforms; linux ++ darwin;
-    # knownVulnerabilities = [
-    #   "Project uses LLMs to parse untrusted content, making it vulnerable to prompt injection, while having full access to system by default."
-    # ];
   };
 })

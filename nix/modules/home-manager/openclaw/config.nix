@@ -110,7 +110,7 @@ let
       );
       existingWorkspace = (((mergedConfig0.agents or { }).defaults or { }).workspace or null);
       mergedConfig =
-        if (cfg.workspace.pinAgentDefaults or true) && existingWorkspace == null then
+        if cfg.workspace.pinAgentDefaults && existingWorkspace == null then
           lib.recursiveUpdate mergedConfig0 {
             agents = {
               defaults = {
