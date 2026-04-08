@@ -188,6 +188,15 @@ let
     if (pluginSlots.memory or null) == "example-plugin" && (pluginSlots.contextEngine or null) == "left-pad"
     then "ok"
     else throw "Expected plugins._slots to render to openclaw.json plugins.slots.";
+  pluginConfigPathKey = ".openclaw/.config/example-plugin/config.json";
+  pluginConfigJson = moduleEval.config.home.file."${pluginConfigPathKey}".text or null;
+  pluginConfigKey =
+    if pluginConfigJson == builtins.toJSON {
+      greeting = "hello";
+      profile = "default";
+    }
+    then "ok"
+    else throw "Expected plugin settings mirror at ${pluginConfigPathKey}.";
   configFile = pkgs.writeText "openclaw-config.json" configJson;
   documentsTexts = map (
     pathKey:
@@ -219,6 +228,7 @@ stdenv.mkDerivation {
     OPENCLAW_ENV_FILE_KEY = envFileKey;
     OPENCLAW_PLUGIN_ENTRY_KEY = pluginEntryKey;
     OPENCLAW_PLUGIN_SLOTS_KEY = pluginSlotsKey;
+    OPENCLAW_PLUGIN_CONFIG_KEY = pluginConfigKey;
   };
 
   doCheck = true;

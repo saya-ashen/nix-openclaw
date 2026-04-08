@@ -59,7 +59,7 @@ programs.openclaw.plugins = {
 - `_slots`: runtime slot assignments such as `memory` or `contextEngine`.
 - `env`: values for `requiredEnv` (and any extra env to export).
 - `settings`: JSON-rendered into `openclaw.json.plugins.entries.<plugin>.config`, and into `config.json` inside the first `stateDir` when one exists.
-- Invariant: `env` still follows the declared `requiredEnv`; `stateDir` is only needed when the plugin also expects on-disk state or a mirrored `config.json`.
+- Invariant: `env` still follows the declared `requiredEnv`; `stateDir` is only needed when the plugin also expects on-disk state or a mirrored `config.json` under the instance state root.
 
 ## Dev workflow (fast iteration)
 - Worktree: build and test plugins outside the core repo; point OpenClaw at a local package (`package = pkgs.mkOpenclawPlugin { name = "my-plugin"; src = /Users/you/code/my-plugin; }`).
@@ -67,7 +67,7 @@ programs.openclaw.plugins = {
 - Name collisions: use the same plugin `name` to override a pinned version (last entry wins); keep unique names otherwise to avoid surprise overrides.
 - Skills placement: skills land under `~/.openclaw*/workspace/skills/<plugin>/...` so you can inspect quickly; delete the workspace to fully reset cached skills.
 - Env guardrails: required env vars must point to files (non-empty) or the activation fails—supply temp files during dev to exercise the checks.
-- Settings JSON: inspect the rendered plugin entry in `openclaw.json` and, when present, the mirrored `config.json` in the first `stateDir` to confirm schema and defaults before committing.
+- Settings JSON: inspect the rendered plugin entry in `openclaw.json` and, when present, the mirrored `config.json` under the instance state root / first `stateDir` to confirm schema and defaults before committing.
 
 ## Examples
 
@@ -152,7 +152,7 @@ openclawPlugin = {
 };
 ```
 
-Host behavior: writes `settings` to `openclaw.json.plugins.entries.xuezh.config`, mirrors them to `~/.config/xuezh/config.json`, exports both envs, and fails if the pointed files are missing/empty.
+Host behavior: writes `settings` to `openclaw.json.plugins.entries.xuezh.config`, mirrors them to the instance state root at `.config/xuezh/config.json`, exports both envs, and fails if the pointed files are missing/empty.
 
 ## Bundled Plugin Set (current)
 - summarize, peekaboo, poltergeist, sag, camsnap, gogcli, goplaces, bird, sonoscli, imsg.

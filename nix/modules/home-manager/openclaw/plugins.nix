@@ -236,6 +236,7 @@
           if (p.needs.stateDirs or []) == []
           then null
           else lib.head (p.needs.stateDirs or []);
+        baseDir = pluginBaseDirFor instName;
       in
         if cfg == {}
         then []
@@ -245,7 +246,7 @@
             then []
             else [
               {
-                name = toRelative (resolvePath ("~/" + dir + "/config.json"));
+                name = toRelative "${baseDir}/${dir}/config.json";
                 value = {
                   text = builtins.toJSON cfg;
                 };

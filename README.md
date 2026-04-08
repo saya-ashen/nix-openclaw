@@ -432,7 +432,7 @@ programs.openclaw.plugins.padel-cli = {
 ```
 
 - `env` - paths to secrets/auth files the plugin needs
-- `settings` - preferences (rendered to `openclaw.json.plugins.entries.<plugin>.config`, and mirrored to `config.json` when the plugin declares a `stateDir`)
+- `settings` - preferences (rendered to `openclaw.json.plugins.entries.<plugin>.config`, and mirrored to `config.json` under the instance state root when the plugin declares a `stateDir`)
 
 <details>
 <summary><strong>For plugin developers</strong></summary>
