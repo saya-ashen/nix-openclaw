@@ -1,8 +1,6 @@
 {
   pkgs,
   steipetePkgs ? { },
-  toolNamesOverride ? null,
-  excludeToolNames ? [ ],
 }:
 let
   lib = pkgs.lib;
@@ -53,8 +51,7 @@ let
     "qmd"
     "nano-pdf"
   ] ++ bundledToolNames;
-  toolNamesBase = if toolNamesOverride != null then toolNamesOverride else baseNames ++ extraNames;
-  toolNames = builtins.filter (name: !builtins.elem name excludeToolNames) toolNamesBase;
+  toolNames = baseNames ++ extraNames;
 
 in
 {

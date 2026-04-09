@@ -802,23 +802,6 @@ in {
 
 Plugins are keyed by their declared `name`. If two plugins declare the same name, the **last entry wins** (use this to override a prod plugin with a local dev one).
 
-### Tool overrides (legacy / optional)
-
-For homelab setups, prefer a plain `pkgs.openclaw` package plus declarative plugins.
-If you already rely on tool override behavior, the old knobs still exist:
-
-```nix
-programs.openclaw.excludeTools = [ "git" "jq" "ripgrep" ];
-```
-
-Or provide a custom list:
-
-```nix
-programs.openclaw.toolNames = [ "nodejs_22" "pnpm_10" "summarize" ];
-```
-
-If you override `programs.openclaw.package`, use `pkgs.openclawPackages.withTools { ... }.openclaw` to apply these lists.
-
 ---
 
 ## Packaging & Updates

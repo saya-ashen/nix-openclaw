@@ -1,15 +1,12 @@
 {
   pkgs,
   steipetePkgs ? { },
-  toolNamesOverride ? null,
-  excludeToolNames ? [ ],
 }:
 let
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
   toolSets = import ../tools/extended.nix {
     pkgs = pkgs;
     steipetePkgs = steipetePkgs;
-    inherit toolNamesOverride excludeToolNames;
   };
   openclawGateway = pkgs.callPackage ./openclaw-gateway.nix { };
   openclawApp = if isDarwin then pkgs.callPackage ./openclaw-app.nix { } else null;

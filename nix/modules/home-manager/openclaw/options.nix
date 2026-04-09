@@ -109,18 +109,6 @@ in
       description = "OpenClaw batteries-included package.";
     };
 
-    toolNames = lib.mkOption {
-      type = lib.types.nullOr (lib.types.listOf lib.types.str);
-      default = null;
-      description = "Override the built-in toolchain names (see nix/tools/extended.nix).";
-    };
-
-    excludeTools = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [ ];
-      description = "Tool names to remove from the built-in toolchain.";
-    };
-
     appPackage = lib.mkOption {
       type = lib.types.nullOr lib.types.package;
       default = null;
