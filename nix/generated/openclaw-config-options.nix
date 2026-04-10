@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 22955fcdcb5ffa937e0ab396c314f5266961b960. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev cfc1ce7547c1472e79c6ebc8ea38b7fb33497a6c. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -599,6 +599,10 @@ in
         };
         target = lib.mkOption {
           type = t.nullOr (t.str);
+          default = null;
+        };
+        timeoutSeconds = lib.mkOption {
+          type = t.nullOr (t.int);
           default = null;
         };
         to = lib.mkOption {
@@ -1659,6 +1663,10 @@ in
         };
         target = lib.mkOption {
           type = t.nullOr (t.str);
+          default = null;
+        };
+        timeoutSeconds = lib.mkOption {
+          type = t.nullOr (t.int);
           default = null;
         };
         to = lib.mkOption {
