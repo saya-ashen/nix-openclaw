@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev abc499ec494de3a5846485f5ba87557ed818e6e4. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev c66afe472ace6208219fcf093d542b71c532ca81. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -490,6 +490,19 @@ in
       };
       elevatedDefault = lib.mkOption {
         type = t.nullOr (t.oneOf [ (t.enum [ "off" ]) (t.enum [ "on" ]) (t.enum [ "ask" ]) (t.enum [ "full" ]) ]);
+        default = null;
+      };
+      embeddedHarness = lib.mkOption {
+        type = t.nullOr (t.submodule { options = {
+        fallback = lib.mkOption {
+          type = t.nullOr (t.enum [ "pi" "none" ]);
+          default = null;
+        };
+        runtime = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+      }; });
         default = null;
       };
       embeddedPi = lib.mkOption {
@@ -1532,6 +1545,19 @@ in
       };
       default = lib.mkOption {
         type = t.nullOr (t.bool);
+        default = null;
+      };
+      embeddedHarness = lib.mkOption {
+        type = t.nullOr (t.submodule { options = {
+        fallback = lib.mkOption {
+          type = t.nullOr (t.enum [ "pi" "none" ]);
+          default = null;
+        };
+        runtime = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+      }; });
         default = null;
       };
       fastModeDefault = lib.mkOption {
