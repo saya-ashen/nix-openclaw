@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 70e128e559819e29aae47e72e226c5b2fed32a8d. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 22955fcdcb5ffa937e0ab396c314f5266961b960. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -507,6 +507,10 @@ in
       };
       embeddedPi = lib.mkOption {
         type = t.nullOr (t.submodule { options = {
+        executionContract = lib.mkOption {
+          type = t.nullOr (t.oneOf [ (t.enum [ "default" ]) (t.enum [ "strict-agentic" ]) ]);
+          default = null;
+        };
         projectSettingsPolicy = lib.mkOption {
           type = t.nullOr (t.oneOf [ (t.enum [ "trusted" ]) (t.enum [ "sanitize" ]) (t.enum [ "ignore" ]) ]);
           default = null;
@@ -1555,6 +1559,15 @@ in
         };
         runtime = lib.mkOption {
           type = t.nullOr (t.str);
+          default = null;
+        };
+      }; });
+        default = null;
+      };
+      embeddedPi = lib.mkOption {
+        type = t.nullOr (t.submodule { options = {
+        executionContract = lib.mkOption {
+          type = t.nullOr (t.oneOf [ (t.enum [ "default" ]) (t.enum [ "strict-agentic" ]) ]);
           default = null;
         };
       }; });
