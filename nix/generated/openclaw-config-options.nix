@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev c61be87b0e40de0ed178a6aff0ddb0700ef184e3. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev a12c2ecd8a066ee2b382943e3116cdbda4584053. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -5227,6 +5227,10 @@ in
       };
       request = lib.mkOption {
         type = t.nullOr (t.submodule { options = {
+        allowPrivateNetwork = lib.mkOption {
+          type = t.nullOr (t.bool);
+          default = null;
+        };
         auth = lib.mkOption {
           type = t.nullOr (t.oneOf [ (t.submodule { options = {
           mode = lib.mkOption {
