@@ -2,7 +2,7 @@
 {
   owner = "openclaw";
   repo = "openclaw";
-  rev = "0f7d9c957093d023e9249ae8ea59130fdbf92626";
-  hash = "sha256-cRWnwRcMeo6AtXgCI2udleMN6NJ7+VLgTMC2ic4kATc=";
+  rev = "44f02dbbc67f0af57b2930f54910f32dd97f03a4";
+  hash = "sha256-Z+3NRoPnuBuk+Kf7G2ukkfyEctEJLYr9xZpyZmHsduc=";
   pnpmDepsHash = "";
 }
