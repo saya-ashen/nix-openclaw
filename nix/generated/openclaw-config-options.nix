@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev d7479dc61a43add68283081edf8adef3da1234e3. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 0ed512bbdf0458ca21ddcc6fb9141635bb696b66. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -3673,6 +3673,10 @@ in
     };
     controlUi = lib.mkOption {
       type = t.nullOr (t.submodule { options = {
+      allowExternalEmbedUrls = lib.mkOption {
+        type = t.nullOr (t.bool);
+        default = null;
+      };
       allowInsecureAuth = lib.mkOption {
         type = t.nullOr (t.bool);
         default = null;
@@ -3691,6 +3695,10 @@ in
       };
       dangerouslyDisableDeviceAuth = lib.mkOption {
         type = t.nullOr (t.bool);
+        default = null;
+      };
+      embedSandbox = lib.mkOption {
+        type = t.nullOr (t.oneOf [ (t.enum [ "strict" ]) (t.enum [ "scripts" ]) (t.enum [ "trusted" ]) ]);
         default = null;
       };
       enabled = lib.mkOption {
