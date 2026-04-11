@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 52800131d28e80015a158e076efb96f7c35e5113. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev d7479dc61a43add68283081edf8adef3da1234e3. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -6889,6 +6889,15 @@ in
     };
     media = lib.mkOption {
       type = t.nullOr (t.submodule { options = {
+      asyncCompletion = lib.mkOption {
+        type = t.nullOr (t.submodule { options = {
+        directSend = lib.mkOption {
+          type = t.nullOr (t.bool);
+          default = null;
+        };
+      }; });
+        default = null;
+      };
       audio = lib.mkOption {
         type = t.nullOr (t.submodule { options = {
         attachments = lib.mkOption {
