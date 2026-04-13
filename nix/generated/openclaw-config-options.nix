@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 8820547a0716fcda4f72e24f49837f8dc7ee8e51. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 241349cdc5b26ce8155b35a3fc051c342a214005. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -2714,6 +2714,10 @@ in
             default = null;
           };
           historySize = lib.mkOption {
+            type = t.nullOr (t.int);
+            default = null;
+          };
+          unknownToolThreshold = lib.mkOption {
             type = t.nullOr (t.int);
             default = null;
           };
@@ -6914,6 +6918,10 @@ in
         default = null;
       };
       historySize = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
+      unknownToolThreshold = lib.mkOption {
         type = t.nullOr (t.int);
         default = null;
       };
