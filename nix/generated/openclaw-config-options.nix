@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev eb1080369165408eb4cf5b4eedbed2ffc07994fa. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 687ede50a5ac01053c5b3e6f54c1d56cb832bc2f. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -5282,6 +5282,10 @@ in
             default = null;
           };
           supportsDeveloperRole = lib.mkOption {
+            type = t.nullOr (t.bool);
+            default = null;
+          };
+          supportsPromptCacheKey = lib.mkOption {
             type = t.nullOr (t.bool);
             default = null;
           };
