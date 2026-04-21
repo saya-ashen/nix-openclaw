@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev e1d7e2e8a245833dbf5442986cc033a43388ccbf. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 6ce17db11aa1aa4fd27f4317d5f8a2586d153c14. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -1463,6 +1463,40 @@ in
       }; });
         default = null;
       };
+      silentReply = lib.mkOption {
+        type = t.nullOr (t.submodule { options = {
+        direct = lib.mkOption {
+          type = t.nullOr (t.oneOf [ (t.enum [ "allow" ]) (t.enum [ "disallow" ]) ]);
+          default = null;
+        };
+        group = lib.mkOption {
+          type = t.nullOr (t.oneOf [ (t.enum [ "allow" ]) (t.enum [ "disallow" ]) ]);
+          default = null;
+        };
+        internal = lib.mkOption {
+          type = t.nullOr (t.oneOf [ (t.enum [ "allow" ]) (t.enum [ "disallow" ]) ]);
+          default = null;
+        };
+      }; });
+        default = null;
+      };
+      silentReplyRewrite = lib.mkOption {
+        type = t.nullOr (t.submodule { options = {
+        direct = lib.mkOption {
+          type = t.nullOr (t.bool);
+          default = null;
+        };
+        group = lib.mkOption {
+          type = t.nullOr (t.bool);
+          default = null;
+        };
+        internal = lib.mkOption {
+          type = t.nullOr (t.bool);
+          default = null;
+        };
+      }; });
+        default = null;
+      };
       skills = lib.mkOption {
         type = t.nullOr (t.listOf (t.str));
         default = null;
@@ -1561,7 +1595,7 @@ in
         default = null;
       };
       thinkingDefault = lib.mkOption {
-        type = t.nullOr (t.oneOf [ (t.enum [ "off" ]) (t.enum [ "minimal" ]) (t.enum [ "low" ]) (t.enum [ "medium" ]) (t.enum [ "high" ]) (t.enum [ "xhigh" ]) (t.enum [ "adaptive" ]) ]);
+        type = t.nullOr (t.oneOf [ (t.enum [ "off" ]) (t.enum [ "minimal" ]) (t.enum [ "low" ]) (t.enum [ "medium" ]) (t.enum [ "high" ]) (t.enum [ "xhigh" ]) (t.enum [ "adaptive" ]) (t.enum [ "max" ]) ]);
         default = null;
       };
       timeFormat = lib.mkOption {
@@ -2583,7 +2617,7 @@ in
         default = null;
       };
       thinkingDefault = lib.mkOption {
-        type = t.nullOr (t.enum [ "off" "minimal" "low" "medium" "high" "xhigh" "adaptive" ]);
+        type = t.nullOr (t.enum [ "off" "minimal" "low" "medium" "high" "xhigh" "adaptive" "max" ]);
         default = null;
       };
       tools = lib.mkOption {
@@ -6665,6 +6699,46 @@ in
       default = null;
     };
   }; });
+    default = null;
+  };
+
+  surfaces = lib.mkOption {
+    type = t.nullOr (t.attrsOf (t.submodule { options = {
+    silentReply = lib.mkOption {
+      type = t.nullOr (t.submodule { options = {
+      direct = lib.mkOption {
+        type = t.nullOr (t.oneOf [ (t.enum [ "allow" ]) (t.enum [ "disallow" ]) ]);
+        default = null;
+      };
+      group = lib.mkOption {
+        type = t.nullOr (t.oneOf [ (t.enum [ "allow" ]) (t.enum [ "disallow" ]) ]);
+        default = null;
+      };
+      internal = lib.mkOption {
+        type = t.nullOr (t.oneOf [ (t.enum [ "allow" ]) (t.enum [ "disallow" ]) ]);
+        default = null;
+      };
+    }; });
+      default = null;
+    };
+    silentReplyRewrite = lib.mkOption {
+      type = t.nullOr (t.submodule { options = {
+      direct = lib.mkOption {
+        type = t.nullOr (t.bool);
+        default = null;
+      };
+      group = lib.mkOption {
+        type = t.nullOr (t.bool);
+        default = null;
+      };
+      internal = lib.mkOption {
+        type = t.nullOr (t.bool);
+        default = null;
+      };
+    }; });
+      default = null;
+    };
+  }; }));
     default = null;
   };
 
