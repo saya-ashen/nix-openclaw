@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 43a941b51c16e32246314a905864e188865d5d1a. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 13fae1685f865b757d28af7b183c900dc412d712. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -411,6 +411,10 @@ in
         };
         timeoutSeconds = lib.mkOption {
           type = t.nullOr (t.int);
+          default = null;
+        };
+        truncateAfterCompaction = lib.mkOption {
+          type = t.nullOr (t.bool);
           default = null;
         };
       }; });
