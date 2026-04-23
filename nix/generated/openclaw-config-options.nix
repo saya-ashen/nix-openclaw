@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 5c229e32b783ec6c1e87cc1944f9b10cf5a84832. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev f40f8a60cce5ea506c992fb83d84f8db82c640c3. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -6273,6 +6273,10 @@ in
         type = t.enum [ "env" ];
       };
     }; }) (t.submodule { options = {
+      allowInsecurePath = lib.mkOption {
+        type = t.nullOr (t.bool);
+        default = null;
+      };
       maxBytes = lib.mkOption {
         type = t.nullOr (t.int);
         default = null;
