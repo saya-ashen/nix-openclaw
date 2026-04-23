@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev fc39f101303bfabf43b7ff7696b63a1dbf2bd8c6. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 58dc22c0990aa183c0808e70d3b5ba31e8251513. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -774,6 +774,10 @@ in
         };
         local = lib.mkOption {
           type = t.nullOr (t.submodule { options = {
+          contextSize = lib.mkOption {
+            type = t.nullOr (t.oneOf [ (t.int) (t.enum [ "auto" ]) ]);
+            default = null;
+          };
           modelCacheDir = lib.mkOption {
             type = t.nullOr (t.str);
             default = null;
@@ -1908,6 +1912,10 @@ in
         };
         local = lib.mkOption {
           type = t.nullOr (t.submodule { options = {
+          contextSize = lib.mkOption {
+            type = t.nullOr (t.oneOf [ (t.int) (t.enum [ "auto" ]) ]);
+            default = null;
+          };
           modelCacheDir = lib.mkOption {
             type = t.nullOr (t.str);
             default = null;
