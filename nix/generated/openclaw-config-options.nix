@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev d12b52361148e2c0e281537e467aa0a2277eeb6b. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 86f8c826e20a01d1bba67c0ba6e73182fbf0455f. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -6123,6 +6123,10 @@ in
       };
       hooks = lib.mkOption {
         type = t.nullOr (t.submodule { options = {
+        allowConversationAccess = lib.mkOption {
+          type = t.nullOr (t.bool);
+          default = null;
+        };
         allowPromptInjection = lib.mkOption {
           type = t.nullOr (t.bool);
           default = null;
