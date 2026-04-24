@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 41448da4172ebe0d9ca0102ef8abd1e87a286b98. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 37c250695b600fb12afc799ee1b32d7aae73d096. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -5466,6 +5466,10 @@ in
         };
         maxTokens = lib.mkOption {
           type = t.nullOr (t.number);
+          default = null;
+        };
+        metadataSource = lib.mkOption {
+          type = t.nullOr (t.enum [ "models-add" ]);
           default = null;
         };
         name = lib.mkOption {
