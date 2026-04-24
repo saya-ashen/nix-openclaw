@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 5d1568963bedd1dd6a414794c899412f2c6e66d0. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev c12af80b5bc2925c8a54528a17a20e4261625cfa. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -3586,6 +3586,35 @@ in
     };
     otel = lib.mkOption {
       type = t.nullOr (t.submodule { options = {
+      captureContent = lib.mkOption {
+        type = t.nullOr (t.oneOf [ (t.bool) (t.submodule { options = {
+        enabled = lib.mkOption {
+          type = t.nullOr (t.bool);
+          default = null;
+        };
+        inputMessages = lib.mkOption {
+          type = t.nullOr (t.bool);
+          default = null;
+        };
+        outputMessages = lib.mkOption {
+          type = t.nullOr (t.bool);
+          default = null;
+        };
+        systemPrompt = lib.mkOption {
+          type = t.nullOr (t.bool);
+          default = null;
+        };
+        toolInputs = lib.mkOption {
+          type = t.nullOr (t.bool);
+          default = null;
+        };
+        toolOutputs = lib.mkOption {
+          type = t.nullOr (t.bool);
+          default = null;
+        };
+      }; }) ]);
+        default = null;
+      };
       enabled = lib.mkOption {
         type = t.nullOr (t.bool);
         default = null;
