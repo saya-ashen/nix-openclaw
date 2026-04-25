@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 2cd2732ab6695a4b3220ce41166b74aca7097c5f. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev d78cef1d7193694f51685b00b04a12ceae7bb8d4. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -421,7 +421,7 @@ in
         default = null;
       };
       contextInjection = lib.mkOption {
-        type = t.nullOr (t.oneOf [ (t.enum [ "always" ]) (t.enum [ "continuation-skip" ]) ]);
+        type = t.nullOr (t.oneOf [ (t.enum [ "always" ]) (t.enum [ "continuation-skip" ]) (t.enum [ "never" ]) ]);
         default = null;
       };
       contextLimits = lib.mkOption {
@@ -3199,6 +3199,10 @@ in
 
   browser = lib.mkOption {
     type = t.nullOr (t.submodule { options = {
+    actionTimeoutMs = lib.mkOption {
+      type = t.nullOr (t.int);
+      default = null;
+    };
     attachOnly = lib.mkOption {
       type = t.nullOr (t.bool);
       default = null;
@@ -4731,6 +4735,10 @@ in
         default = null;
       };
     }; }));
+      default = null;
+    };
+    sessionIdleTtlMs = lib.mkOption {
+      type = t.nullOr (t.number);
       default = null;
     };
   }; });
