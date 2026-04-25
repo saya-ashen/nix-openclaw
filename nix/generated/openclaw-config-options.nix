@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 2bf2fd6c3d13fede007f3e98f275bc0f20b7bfb0. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 2cd2732ab6695a4b3220ce41166b74aca7097c5f. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -1695,6 +1695,10 @@ in
       }; });
         default = null;
       };
+      contextTokens = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
       default = lib.mkOption {
         type = t.nullOr (t.bool);
         default = null;
@@ -3260,6 +3264,10 @@ in
         type = t.nullOr (t.oneOf [ (t.enum [ "openclaw" ]) (t.enum [ "clawd" ]) (t.enum [ "existing-session" ]) ]);
         default = null;
       };
+      executablePath = lib.mkOption {
+        type = t.nullOr (t.str);
+        default = null;
+      };
       headless = lib.mkOption {
         type = t.nullOr (t.bool);
         default = null;
@@ -4096,6 +4104,15 @@ in
       };
       denyCommands = lib.mkOption {
         type = t.nullOr (t.listOf (t.str));
+        default = null;
+      };
+      pairing = lib.mkOption {
+        type = t.nullOr (t.submodule { options = {
+        autoApproveCidrs = lib.mkOption {
+          type = t.nullOr (t.listOf (t.str));
+          default = null;
+        };
+      }; });
         default = null;
       };
     }; });
