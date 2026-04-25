@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev d78cef1d7193694f51685b00b04a12ceae7bb8d4. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev fd74fc5a4f556d4c597a4de70bb2948ff503b746. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -3423,6 +3423,29 @@ in
     };
     useAccessGroups = lib.mkOption {
       type = t.nullOr (t.bool);
+      default = null;
+    };
+  }; });
+    default = null;
+  };
+
+  crestodian = lib.mkOption {
+    type = t.nullOr (t.submodule { options = {
+    rescue = lib.mkOption {
+      type = t.nullOr (t.submodule { options = {
+      enabled = lib.mkOption {
+        type = t.nullOr (t.oneOf [ (t.enum [ "auto" ]) (t.bool) ]);
+        default = null;
+      };
+      ownerDmOnly = lib.mkOption {
+        type = t.nullOr (t.bool);
+        default = null;
+      };
+      pendingTtlMinutes = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
+    }; });
       default = null;
     };
   }; });
