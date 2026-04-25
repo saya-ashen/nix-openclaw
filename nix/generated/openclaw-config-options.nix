@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 835f768036f54d069695677b6a94607a5f0b6f08. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 5c6a5afe813794084c463e6d09c30da105e330ac. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -291,6 +291,10 @@ in
           default = null;
         };
         systemPromptArg = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        systemPromptFileArg = lib.mkOption {
           type = t.nullOr (t.str);
           default = null;
         };
@@ -3282,6 +3286,14 @@ in
       };
       headless = lib.mkOption {
         type = t.nullOr (t.bool);
+        default = null;
+      };
+      mcpArgs = lib.mkOption {
+        type = t.nullOr (t.listOf (t.str));
+        default = null;
+      };
+      mcpCommand = lib.mkOption {
+        type = t.nullOr (t.str);
         default = null;
       };
       userDataDir = lib.mkOption {
