@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 89755d1c79678610720cdb9ce504cfd62c261f64. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 835f768036f54d069695677b6a94607a5f0b6f08. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -3241,6 +3241,14 @@ in
     };
     headless = lib.mkOption {
       type = t.nullOr (t.bool);
+      default = null;
+    };
+    localCdpReadyTimeoutMs = lib.mkOption {
+      type = t.nullOr (t.int);
+      default = null;
+    };
+    localLaunchTimeoutMs = lib.mkOption {
+      type = t.nullOr (t.int);
       default = null;
     };
     noSandbox = lib.mkOption {
