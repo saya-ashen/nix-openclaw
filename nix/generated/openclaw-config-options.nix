@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 585784643e0014ca012982bea44808bb35f6c468. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 6cf5a5fbcd5023a330ad145bb81f72e5c2348e3c. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -99,6 +99,19 @@ in
     type = t.nullOr (t.submodule { options = {
     defaults = lib.mkOption {
       type = t.nullOr (t.submodule { options = {
+      agentRuntime = lib.mkOption {
+        type = t.nullOr (t.submodule { options = {
+        fallback = lib.mkOption {
+          type = t.nullOr (t.enum [ "pi" "none" ]);
+          default = null;
+        };
+        id = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+      }; });
+        default = null;
+      };
       blockStreamingBreak = lib.mkOption {
         type = t.nullOr (t.oneOf [ (t.enum [ "text_end" ]) (t.enum [ "message_end" ]) ]);
         default = null;
@@ -1708,6 +1721,19 @@ in
       type = t.nullOr (t.listOf (t.submodule { options = {
       agentDir = lib.mkOption {
         type = t.nullOr (t.str);
+        default = null;
+      };
+      agentRuntime = lib.mkOption {
+        type = t.nullOr (t.submodule { options = {
+        fallback = lib.mkOption {
+          type = t.nullOr (t.enum [ "pi" "none" ]);
+          default = null;
+        };
+        id = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+      }; });
         default = null;
       };
       contextLimits = lib.mkOption {
