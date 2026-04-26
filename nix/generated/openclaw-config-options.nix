@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 7741dbb75991230bee2fcb6c8033b7d38bb5e856. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 76dc66f5fa5d30124e1d1e979b5a981fc24130ba. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -2929,6 +2929,119 @@ in
       }; });
         default = null;
       };
+      tts = lib.mkOption {
+        type = t.nullOr (t.submodule { options = {
+        auto = lib.mkOption {
+          type = t.nullOr (t.enum [ "off" "always" "inbound" "tagged" ]);
+          default = null;
+        };
+        enabled = lib.mkOption {
+          type = t.nullOr (t.bool);
+          default = null;
+        };
+        maxTextLength = lib.mkOption {
+          type = t.nullOr (t.int);
+          default = null;
+        };
+        mode = lib.mkOption {
+          type = t.nullOr (t.enum [ "final" "all" ]);
+          default = null;
+        };
+        modelOverrides = lib.mkOption {
+          type = t.nullOr (t.submodule { options = {
+          allowModelId = lib.mkOption {
+            type = t.nullOr (t.bool);
+            default = null;
+          };
+          allowNormalization = lib.mkOption {
+            type = t.nullOr (t.bool);
+            default = null;
+          };
+          allowProvider = lib.mkOption {
+            type = t.nullOr (t.bool);
+            default = null;
+          };
+          allowSeed = lib.mkOption {
+            type = t.nullOr (t.bool);
+            default = null;
+          };
+          allowText = lib.mkOption {
+            type = t.nullOr (t.bool);
+            default = null;
+          };
+          allowVoice = lib.mkOption {
+            type = t.nullOr (t.bool);
+            default = null;
+          };
+          allowVoiceSettings = lib.mkOption {
+            type = t.nullOr (t.bool);
+            default = null;
+          };
+          enabled = lib.mkOption {
+            type = t.nullOr (t.bool);
+            default = null;
+          };
+        }; });
+          default = null;
+        };
+        prefsPath = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        provider = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        providers = lib.mkOption {
+          type = t.nullOr (t.attrsOf (t.submodule { options = {
+          apiKey = lib.mkOption {
+            type = t.nullOr (t.oneOf [ (t.str) (t.oneOf [ (t.submodule { options = {
+            id = lib.mkOption {
+              type = t.str;
+            };
+            provider = lib.mkOption {
+              type = t.str;
+            };
+            source = lib.mkOption {
+              type = t.enum [ "env" ];
+            };
+          }; }) (t.submodule { options = {
+            id = lib.mkOption {
+              type = t.str;
+            };
+            provider = lib.mkOption {
+              type = t.str;
+            };
+            source = lib.mkOption {
+              type = t.enum [ "file" ];
+            };
+          }; }) (t.submodule { options = {
+            id = lib.mkOption {
+              type = t.str;
+            };
+            provider = lib.mkOption {
+              type = t.str;
+            };
+            source = lib.mkOption {
+              type = t.enum [ "exec" ];
+            };
+          }; }) ]) ]);
+            default = null;
+          };
+        }; }));
+          default = null;
+        };
+        summaryModel = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        timeoutMs = lib.mkOption {
+          type = t.nullOr (t.int);
+          default = null;
+        };
+      }; });
+        default = null;
+      };
       workspace = lib.mkOption {
         type = t.nullOr (t.str);
         default = null;
@@ -3743,8 +3856,16 @@ in
         type = t.nullOr (t.bool);
         default = null;
       };
+      logsEndpoint = lib.mkOption {
+        type = t.nullOr (t.str);
+        default = null;
+      };
       metrics = lib.mkOption {
         type = t.nullOr (t.bool);
+        default = null;
+      };
+      metricsEndpoint = lib.mkOption {
+        type = t.nullOr (t.str);
         default = null;
       };
       protocol = lib.mkOption {
@@ -3761,6 +3882,10 @@ in
       };
       traces = lib.mkOption {
         type = t.nullOr (t.bool);
+        default = null;
+      };
+      tracesEndpoint = lib.mkOption {
+        type = t.nullOr (t.str);
         default = null;
       };
     }; });
@@ -6295,86 +6420,6 @@ in
           default = null;
         };
       }; });
-        default = null;
-      };
-    }; }));
-      default = null;
-    };
-    installs = lib.mkOption {
-      type = t.nullOr (t.attrsOf (t.submodule { options = {
-      clawhubChannel = lib.mkOption {
-        type = t.nullOr (t.oneOf [ (t.enum [ "official" ]) (t.enum [ "community" ]) (t.enum [ "private" ]) ]);
-        default = null;
-      };
-      clawhubFamily = lib.mkOption {
-        type = t.nullOr (t.oneOf [ (t.enum [ "code-plugin" ]) (t.enum [ "bundle-plugin" ]) ]);
-        default = null;
-      };
-      clawhubPackage = lib.mkOption {
-        type = t.nullOr (t.str);
-        default = null;
-      };
-      clawhubUrl = lib.mkOption {
-        type = t.nullOr (t.str);
-        default = null;
-      };
-      installPath = lib.mkOption {
-        type = t.nullOr (t.str);
-        default = null;
-      };
-      installedAt = lib.mkOption {
-        type = t.nullOr (t.str);
-        default = null;
-      };
-      integrity = lib.mkOption {
-        type = t.nullOr (t.str);
-        default = null;
-      };
-      marketplaceName = lib.mkOption {
-        type = t.nullOr (t.str);
-        default = null;
-      };
-      marketplacePlugin = lib.mkOption {
-        type = t.nullOr (t.str);
-        default = null;
-      };
-      marketplaceSource = lib.mkOption {
-        type = t.nullOr (t.str);
-        default = null;
-      };
-      resolvedAt = lib.mkOption {
-        type = t.nullOr (t.str);
-        default = null;
-      };
-      resolvedName = lib.mkOption {
-        type = t.nullOr (t.str);
-        default = null;
-      };
-      resolvedSpec = lib.mkOption {
-        type = t.nullOr (t.str);
-        default = null;
-      };
-      resolvedVersion = lib.mkOption {
-        type = t.nullOr (t.str);
-        default = null;
-      };
-      shasum = lib.mkOption {
-        type = t.nullOr (t.str);
-        default = null;
-      };
-      source = lib.mkOption {
-        type = t.oneOf [ (t.oneOf [ (t.enum [ "npm" ]) (t.enum [ "archive" ]) (t.enum [ "path" ]) (t.enum [ "clawhub" ]) ]) (t.enum [ "marketplace" ]) ];
-      };
-      sourcePath = lib.mkOption {
-        type = t.nullOr (t.str);
-        default = null;
-      };
-      spec = lib.mkOption {
-        type = t.nullOr (t.str);
-        default = null;
-      };
-      version = lib.mkOption {
-        type = t.nullOr (t.str);
         default = null;
       };
     }; }));
