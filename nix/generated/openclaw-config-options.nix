@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev ca67762b8887a4c97cefe7d434b6d3b539d47242. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 4de235f9088f5b21200fa0cf81c08d29b3d140fe. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -728,16 +728,6 @@ in
           default = null;
         };
       }; }) ]);
-        default = null;
-      };
-      llm = lib.mkOption {
-        type = t.nullOr (t.submodule { options = {
-        idleTimeoutSeconds = lib.mkOption {
-          type = t.nullOr (t.int);
-          default = null;
-          description = "Idle timeout for LLM streaming responses in seconds. If no token is received within this time, the request is aborted. Set to 0 to disable. Default: 120 seconds.";
-        };
-      }; });
         default = null;
       };
       maxConcurrent = lib.mkOption {
@@ -3782,6 +3772,10 @@ in
         default = null;
       };
       enabled = lib.mkOption {
+        type = t.nullOr (t.bool);
+        default = null;
+      };
+      includeSkipped = lib.mkOption {
         type = t.nullOr (t.bool);
         default = null;
       };
