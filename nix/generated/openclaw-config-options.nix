@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 7902c769dabe5fdd45c7bd2edef2eb823e9d5dd4. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 6590e0e872f83614343de073909e013c66ed280e. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -346,6 +346,10 @@ in
         };
         keepRecentTokens = lib.mkOption {
           type = t.nullOr (t.int);
+          default = null;
+        };
+        maxActiveTranscriptBytes = lib.mkOption {
+          type = t.nullOr (t.oneOf [ (t.int) (t.str) ]);
           default = null;
         };
         maxHistoryShare = lib.mkOption {
@@ -5965,6 +5969,10 @@ in
         };
         name = lib.mkOption {
           type = t.str;
+        };
+        params = lib.mkOption {
+          type = t.nullOr (t.attrsOf (t.anything));
+          default = null;
         };
         reasoning = lib.mkOption {
           type = t.nullOr (t.bool);
