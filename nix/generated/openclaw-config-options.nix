@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 4de235f9088f5b21200fa0cf81c08d29b3d140fe. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev a9648664c16534e59ec2850646aff09cc6105134. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -770,6 +770,10 @@ in
         }; });
           default = null;
         };
+        documentInputType = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
         enabled = lib.mkOption {
           type = t.nullOr (t.bool);
           default = null;
@@ -788,6 +792,10 @@ in
           default = null;
         };
         fallback = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        inputType = lib.mkOption {
           type = t.nullOr (t.str);
           default = null;
         };
@@ -916,6 +924,10 @@ in
             default = null;
           };
         }; });
+          default = null;
+        };
+        queryInputType = lib.mkOption {
+          type = t.nullOr (t.str);
           default = null;
         };
         remote = lib.mkOption {
@@ -1949,6 +1961,10 @@ in
         }; });
           default = null;
         };
+        documentInputType = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
         enabled = lib.mkOption {
           type = t.nullOr (t.bool);
           default = null;
@@ -1967,6 +1983,10 @@ in
           default = null;
         };
         fallback = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        inputType = lib.mkOption {
           type = t.nullOr (t.str);
           default = null;
         };
@@ -2095,6 +2115,10 @@ in
             default = null;
           };
         }; });
+          default = null;
+        };
+        queryInputType = lib.mkOption {
+          type = t.nullOr (t.str);
           default = null;
         };
         remote = lib.mkOption {
@@ -5064,6 +5088,10 @@ in
         type = t.nullOr (t.attrsOf (t.oneOf [ (t.str) (t.number) (t.bool) ]));
         default = null;
       };
+      transport = lib.mkOption {
+        type = t.nullOr (t.oneOf [ (t.enum [ "sse" ]) (t.enum [ "streamable-http" ]) ]);
+        default = null;
+      };
       url = lib.mkOption {
         type = t.nullOr (t.str);
         default = null;
@@ -5830,6 +5858,10 @@ in
             type = t.nullOr (t.bool);
             default = null;
           };
+          reasoningEffortMap = lib.mkOption {
+            type = t.nullOr (t.attrsOf (t.str));
+            default = null;
+          };
           requiresAssistantAfterToolResult = lib.mkOption {
             type = t.nullOr (t.bool);
             default = null;
@@ -5852,6 +5884,10 @@ in
           };
           requiresToolResultName = lib.mkOption {
             type = t.nullOr (t.bool);
+            default = null;
+          };
+          supportedReasoningEfforts = lib.mkOption {
+            type = t.nullOr (t.listOf (t.str));
             default = null;
           };
           supportsDeveloperRole = lib.mkOption {
@@ -5883,7 +5919,7 @@ in
             default = null;
           };
           thinkingFormat = lib.mkOption {
-            type = t.nullOr (t.oneOf [ (t.enum [ "openai" ]) (t.enum [ "openrouter" ]) (t.enum [ "deepseek" ]) (t.enum [ "zai" ]) (t.enum [ "qwen" ]) (t.enum [ "qwen-chat-template" ]) ]);
+            type = t.nullOr (t.oneOf [ (t.enum [ "openai" ]) (t.enum [ "openrouter" ]) (t.enum [ "deepseek" ]) (t.enum [ "zai" ]) ]);
             default = null;
           };
           toolCallArgumentsEncoding = lib.mkOption {
