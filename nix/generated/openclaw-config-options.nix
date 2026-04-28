@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev f07844450c05a1968985f0dad97471f2b7d2aa7f. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev da773cf07411d909d99d368c2f3cef9dbf2cd58a. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -997,6 +997,10 @@ in
           };
           headers = lib.mkOption {
             type = t.nullOr (t.attrsOf (t.str));
+            default = null;
+          };
+          nonBatchConcurrency = lib.mkOption {
+            type = t.nullOr (t.int);
             default = null;
           };
         }; });
@@ -2188,6 +2192,10 @@ in
           };
           headers = lib.mkOption {
             type = t.nullOr (t.attrsOf (t.str));
+            default = null;
+          };
+          nonBatchConcurrency = lib.mkOption {
+            type = t.nullOr (t.int);
             default = null;
           };
         }; });
