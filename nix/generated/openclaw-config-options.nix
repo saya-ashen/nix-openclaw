@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev f2df49ab4b576026ec225da516e87ab32269f49c. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev ad954dd1ca61c7ead0c5ce116c9c2da188531567. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -5759,6 +5759,15 @@ in
     type = t.nullOr (t.submodule { options = {
     mode = lib.mkOption {
       type = t.nullOr (t.oneOf [ (t.enum [ "merge" ]) (t.enum [ "replace" ]) ]);
+      default = null;
+    };
+    pricing = lib.mkOption {
+      type = t.nullOr (t.submodule { options = {
+      enabled = lib.mkOption {
+        type = t.nullOr (t.bool);
+        default = null;
+      };
+    }; });
       default = null;
     };
     providers = lib.mkOption {
