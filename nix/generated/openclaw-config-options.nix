@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev bdb75bd8c78854338236ad08d2f70b783db1cd3a. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 8af50b5b4c2a302bc70d5023dc6e01be1fea6c3f. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -12981,6 +12981,23 @@ in
       };
       maxMs = lib.mkOption {
         type = t.nullOr (t.number);
+        default = null;
+      };
+    }; });
+      default = null;
+    };
+    whatsapp = lib.mkOption {
+      type = t.nullOr (t.submodule { options = {
+      connectTimeoutMs = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
+      defaultQueryTimeoutMs = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
+      keepAliveIntervalMs = lib.mkOption {
+        type = t.nullOr (t.int);
         default = null;
       };
     }; });
