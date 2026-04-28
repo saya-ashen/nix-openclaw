@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev da773cf07411d909d99d368c2f3cef9dbf2cd58a. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev f2df49ab4b576026ec225da516e87ab32269f49c. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -364,6 +364,10 @@ in
           };
           forceFlushTranscriptBytes = lib.mkOption {
             type = t.nullOr (t.oneOf [ (t.int) (t.str) ]);
+            default = null;
+          };
+          model = lib.mkOption {
+            type = t.nullOr (t.str);
             default = null;
           };
           prompt = lib.mkOption {
@@ -1809,6 +1813,10 @@ in
         };
         mentionPatterns = lib.mkOption {
           type = t.nullOr (t.listOf (t.str));
+          default = null;
+        };
+        visibleReplies = lib.mkOption {
+          type = t.nullOr (t.enum [ "automatic" "message_tool" ]);
           default = null;
         };
       }; });
@@ -4210,6 +4218,10 @@ in
       };
       trustedProxy = lib.mkOption {
         type = t.nullOr (t.submodule { options = {
+        allowLoopback = lib.mkOption {
+          type = t.nullOr (t.bool);
+          default = null;
+        };
         allowUsers = lib.mkOption {
           type = t.nullOr (t.listOf (t.str));
           default = null;
@@ -5332,6 +5344,10 @@ in
       };
       mentionPatterns = lib.mkOption {
         type = t.nullOr (t.listOf (t.str));
+        default = null;
+      };
+      visibleReplies = lib.mkOption {
+        type = t.nullOr (t.enum [ "automatic" "message_tool" ]);
         default = null;
       };
     }; });
@@ -6727,6 +6743,20 @@ in
         default = null;
       };
     }; });
+      default = null;
+    };
+  }; });
+    default = null;
+  };
+
+  proxy = lib.mkOption {
+    type = t.nullOr (t.submodule { options = {
+    enabled = lib.mkOption {
+      type = t.nullOr (t.bool);
+      default = null;
+    };
+    proxyUrl = lib.mkOption {
+      type = t.nullOr (t.str);
       default = null;
     };
   }; });
