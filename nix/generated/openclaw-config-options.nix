@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 0d1ac827b323e7abab93211f76092b3da3afd4bf. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 83267e99b052563f7c8092a157c5248b25e009e4. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -3782,6 +3782,20 @@ in
     };
     useAccessGroups = lib.mkOption {
       type = t.nullOr (t.bool);
+      default = null;
+    };
+  }; });
+    default = null;
+  };
+
+  commitments = lib.mkOption {
+    type = t.nullOr (t.submodule { options = {
+    enabled = lib.mkOption {
+      type = t.nullOr (t.bool);
+      default = null;
+    };
+    maxPerDay = lib.mkOption {
+      type = t.nullOr (t.int);
       default = null;
     };
   }; });
