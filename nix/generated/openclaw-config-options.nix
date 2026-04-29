@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 35cccbeb68cd4e3291b69b9cf259353016bb75d6. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 42b352c57eb8b891637930a709de00c8594c4d49. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -1194,6 +1194,10 @@ in
           default = null;
         };
       }; });
+        default = null;
+      };
+      reasoningDefault = lib.mkOption {
+        type = t.nullOr (t.oneOf [ (t.enum [ "off" ]) (t.enum [ "on" ]) (t.enum [ "stream" ]) ]);
         default = null;
       };
       repoRoot = lib.mkOption {
@@ -5763,6 +5767,10 @@ in
         default = null;
       };
     }; });
+      default = null;
+    };
+    visibleReplies = lib.mkOption {
+      type = t.nullOr (t.enum [ "automatic" "message_tool" ]);
       default = null;
     };
   }; });
