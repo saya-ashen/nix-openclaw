@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev fd72177830bfce8044d01129840be7a9facc1a26. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 35cccbeb68cd4e3291b69b9cf259353016bb75d6. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -658,6 +658,10 @@ in
         };
         session = lib.mkOption {
           type = t.nullOr (t.str);
+          default = null;
+        };
+        skipWhenBusy = lib.mkOption {
+          type = t.nullOr (t.bool);
           default = null;
         };
         suppressToolErrorWarnings = lib.mkOption {
@@ -1887,6 +1891,10 @@ in
         };
         session = lib.mkOption {
           type = t.nullOr (t.str);
+          default = null;
+        };
+        skipWhenBusy = lib.mkOption {
+          type = t.nullOr (t.bool);
           default = null;
         };
         suppressToolErrorWarnings = lib.mkOption {
@@ -5318,6 +5326,14 @@ in
         };
         onBoot = lib.mkOption {
           type = t.nullOr (t.bool);
+          default = null;
+        };
+        startup = lib.mkOption {
+          type = t.nullOr (t.enum [ "off" "idle" "immediate" ]);
+          default = null;
+        };
+        startupDelayMs = lib.mkOption {
+          type = t.nullOr (t.int);
           default = null;
         };
         updateTimeoutMs = lib.mkOption {
