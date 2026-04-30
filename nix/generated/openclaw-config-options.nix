@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev e4ca4c7fbf151e14b646e0fa25898d96c05def47. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev d55fafd13008d750061116ccd03701020a2f0c6b. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -3671,6 +3671,27 @@ in
       };
       hostnameAllowlist = lib.mkOption {
         type = t.nullOr (t.listOf (t.str));
+        default = null;
+      };
+    }; });
+      default = null;
+    };
+    tabCleanup = lib.mkOption {
+      type = t.nullOr (t.submodule { options = {
+      enabled = lib.mkOption {
+        type = t.nullOr (t.bool);
+        default = null;
+      };
+      idleMinutes = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
+      maxTabsPerSession = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
+      sweepMinutes = lib.mkOption {
+        type = t.nullOr (t.int);
         default = null;
       };
     }; });
