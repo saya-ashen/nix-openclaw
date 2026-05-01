@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 9aad403b7f57720c80573440e22e57a08e938350. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev caa7f7c4cc1785c2233813f158f8618071d996f7. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -1605,6 +1605,10 @@ in
       };
       skipBootstrap = lib.mkOption {
         type = t.nullOr (t.bool);
+        default = null;
+      };
+      skipOptionalBootstrapFiles = lib.mkOption {
+        type = t.nullOr (t.listOf (t.enum [ "SOUL.md" "USER.md" "HEARTBEAT.md" "IDENTITY.md" ]));
         default = null;
       };
       startupContext = lib.mkOption {
@@ -4938,6 +4942,18 @@ in
           type = t.nullOr (t.str);
           default = null;
         };
+        gitCommit = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        gitRef = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        gitUrl = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
         hooks = lib.mkOption {
           type = t.nullOr (t.listOf (t.str));
           default = null;
@@ -4975,7 +4991,7 @@ in
           default = null;
         };
         source = lib.mkOption {
-          type = t.oneOf [ (t.enum [ "npm" ]) (t.enum [ "archive" ]) (t.enum [ "path" ]) (t.enum [ "clawhub" ]) ];
+          type = t.oneOf [ (t.enum [ "npm" ]) (t.enum [ "archive" ]) (t.enum [ "path" ]) (t.enum [ "clawhub" ]) (t.enum [ "git" ]) ];
         };
         sourcePath = lib.mkOption {
           type = t.nullOr (t.str);
