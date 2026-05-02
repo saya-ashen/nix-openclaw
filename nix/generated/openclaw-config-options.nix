@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 1890d9668091052708de151597c62c318b3b4c0b. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev bf6a02c6da8e6fb511f9797b0e5dd85f21898803. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -6193,6 +6193,10 @@ in
         };
       }; });
       };
+      params = lib.mkOption {
+        type = t.nullOr (t.attrsOf (t.anything));
+        default = null;
+      };
       request = lib.mkOption {
         type = t.nullOr (t.submodule { options = {
         allowPrivateNetwork = lib.mkOption {
@@ -7096,10 +7100,6 @@ in
     }; });
       default = null;
     };
-    parentForkMaxTokens = lib.mkOption {
-      type = t.nullOr (t.int);
-      default = null;
-    };
     reset = lib.mkOption {
       type = t.nullOr (t.submodule { options = {
       atHour = lib.mkOption {
@@ -7259,6 +7259,10 @@ in
     };
     threadBindings = lib.mkOption {
       type = t.nullOr (t.submodule { options = {
+      defaultSpawnContext = lib.mkOption {
+        type = t.nullOr (t.enum [ "isolated" "fork" ]);
+        default = null;
+      };
       enabled = lib.mkOption {
         type = t.nullOr (t.bool);
         default = null;
@@ -7269,6 +7273,10 @@ in
       };
       maxAgeHours = lib.mkOption {
         type = t.nullOr (t.number);
+        default = null;
+      };
+      spawnSessions = lib.mkOption {
+        type = t.nullOr (t.bool);
         default = null;
       };
     }; });
