@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev cb42efb6e660b39ad7ab94e23a454105bfcbc7a3. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 4ee234f8ee4887cd4d028e56bd64bafed885cca6. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -7599,6 +7599,74 @@ in
         default = null;
       };
     }; }));
+      default = null;
+    };
+    realtime = lib.mkOption {
+      type = t.nullOr (t.submodule { options = {
+      brain = lib.mkOption {
+        type = t.nullOr (t.enum [ "agent-consult" "direct-tools" "none" ]);
+        default = null;
+      };
+      mode = lib.mkOption {
+        type = t.nullOr (t.enum [ "realtime" "stt-tts" "transcription" ]);
+        default = null;
+      };
+      model = lib.mkOption {
+        type = t.nullOr (t.str);
+        default = null;
+      };
+      provider = lib.mkOption {
+        type = t.nullOr (t.str);
+        default = null;
+      };
+      providers = lib.mkOption {
+        type = t.nullOr (t.attrsOf (t.submodule { options = {
+        apiKey = lib.mkOption {
+          type = t.nullOr (t.oneOf [ (t.str) (t.oneOf [ (t.submodule { options = {
+          id = lib.mkOption {
+            type = t.str;
+          };
+          provider = lib.mkOption {
+            type = t.str;
+          };
+          source = lib.mkOption {
+            type = t.enum [ "env" ];
+          };
+        }; }) (t.submodule { options = {
+          id = lib.mkOption {
+            type = t.str;
+          };
+          provider = lib.mkOption {
+            type = t.str;
+          };
+          source = lib.mkOption {
+            type = t.enum [ "file" ];
+          };
+        }; }) (t.submodule { options = {
+          id = lib.mkOption {
+            type = t.str;
+          };
+          provider = lib.mkOption {
+            type = t.str;
+          };
+          source = lib.mkOption {
+            type = t.enum [ "exec" ];
+          };
+        }; }) ]) ]);
+          default = null;
+        };
+      }; }));
+        default = null;
+      };
+      transport = lib.mkOption {
+        type = t.nullOr (t.enum [ "webrtc" "provider-websocket" "gateway-relay" "managed-room" ]);
+        default = null;
+      };
+      voice = lib.mkOption {
+        type = t.nullOr (t.str);
+        default = null;
+      };
+    }; });
       default = null;
     };
     silenceTimeoutMs = lib.mkOption {
