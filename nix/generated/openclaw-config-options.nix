@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev ea48d27cd779f029e97a860001bc5315638e41e8. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 12624457d0d9569dc78a91d3b92a2b16be9e2242. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -3082,6 +3082,15 @@ in
         };
         message = lib.mkOption {
           type = t.nullOr (t.submodule { options = {
+          actions = lib.mkOption {
+            type = t.nullOr (t.submodule { options = {
+            allow = lib.mkOption {
+              type = t.nullOr (t.listOf (t.str));
+              default = null;
+            };
+          }; });
+            default = null;
+          };
           allowCrossContextSend = lib.mkOption {
             type = t.nullOr (t.bool);
             default = null;
@@ -13036,6 +13045,15 @@ in
     };
     message = lib.mkOption {
       type = t.nullOr (t.submodule { options = {
+      actions = lib.mkOption {
+        type = t.nullOr (t.submodule { options = {
+        allow = lib.mkOption {
+          type = t.nullOr (t.listOf (t.str));
+          default = null;
+        };
+      }; });
+        default = null;
+      };
       allowCrossContextSend = lib.mkOption {
         type = t.nullOr (t.bool);
         default = null;
