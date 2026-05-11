@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 19b78380f5d684df509d574bab94c9124cb01ded. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev eafdbe885fd9706257ccf814bdf0c56cbea415c5. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -2952,6 +2952,10 @@ in
             type = t.nullOr (t.int);
             default = null;
           };
+          commandHighlighting = lib.mkOption {
+            type = t.nullOr (t.bool);
+            default = null;
+          };
           host = lib.mkOption {
             type = t.nullOr (t.enum [ "auto" "sandbox" "gateway" "node" ]);
             default = null;
@@ -3161,6 +3165,23 @@ in
             default = null;
           };
         }; });
+          default = null;
+        };
+        toolsBySender = lib.mkOption {
+          type = t.nullOr (t.attrsOf (t.submodule { options = {
+          allow = lib.mkOption {
+            type = t.nullOr (t.listOf (t.str));
+            default = null;
+          };
+          alsoAllow = lib.mkOption {
+            type = t.nullOr (t.listOf (t.str));
+            default = null;
+          };
+          deny = lib.mkOption {
+            type = t.nullOr (t.listOf (t.str));
+            default = null;
+          };
+        }; }));
           default = null;
         };
       }; });
@@ -7974,6 +7995,10 @@ in
       };
       cleanupMs = lib.mkOption {
         type = t.nullOr (t.int);
+        default = null;
+      };
+      commandHighlighting = lib.mkOption {
+        type = t.nullOr (t.bool);
         default = null;
       };
       host = lib.mkOption {
@@ -13210,6 +13235,23 @@ in
         default = null;
       };
     }; }) ]);
+      default = null;
+    };
+    toolsBySender = lib.mkOption {
+      type = t.nullOr (t.attrsOf (t.submodule { options = {
+      allow = lib.mkOption {
+        type = t.nullOr (t.listOf (t.str));
+        default = null;
+      };
+      alsoAllow = lib.mkOption {
+        type = t.nullOr (t.listOf (t.str));
+        default = null;
+      };
+      deny = lib.mkOption {
+        type = t.nullOr (t.listOf (t.str));
+        default = null;
+      };
+    }; }));
       default = null;
     };
     web = lib.mkOption {
