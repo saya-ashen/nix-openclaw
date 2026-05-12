@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 163eb08a34c4bd7336f8bc693ae7aeeff7dbd531. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev c9ec1dea716f3248277c04aa739fe0a8be89c106. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -1257,6 +1257,27 @@ in
         type = t.nullOr (t.str);
         default = null;
       };
+      runRetries = lib.mkOption {
+        type = t.nullOr (t.submodule { options = {
+        base = lib.mkOption {
+          type = t.nullOr (t.int);
+          default = null;
+        };
+        max = lib.mkOption {
+          type = t.nullOr (t.int);
+          default = null;
+        };
+        min = lib.mkOption {
+          type = t.nullOr (t.int);
+          default = null;
+        };
+        perProfile = lib.mkOption {
+          type = t.nullOr (t.int);
+          default = null;
+        };
+      }; });
+        default = null;
+      };
       sandbox = lib.mkOption {
         type = t.nullOr (t.submodule { options = {
         backend = lib.mkOption {
@@ -2423,6 +2444,27 @@ in
       };
       reasoningDefault = lib.mkOption {
         type = t.nullOr (t.enum [ "on" "off" "stream" ]);
+        default = null;
+      };
+      runRetries = lib.mkOption {
+        type = t.nullOr (t.submodule { options = {
+        base = lib.mkOption {
+          type = t.nullOr (t.int);
+          default = null;
+        };
+        max = lib.mkOption {
+          type = t.nullOr (t.int);
+          default = null;
+        };
+        min = lib.mkOption {
+          type = t.nullOr (t.int);
+          default = null;
+        };
+        perProfile = lib.mkOption {
+          type = t.nullOr (t.int);
+          default = null;
+        };
+      }; });
         default = null;
       };
       runtime = lib.mkOption {
