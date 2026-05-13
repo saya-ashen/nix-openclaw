@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 97df0bc55aff616a921f2f3488e033d38ab419a0. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 2a67a7f65e26f249c607364ace5bc01fa0a0c357. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -3951,6 +3951,27 @@ in
     type = t.nullOr (t.submodule { options = {
     defaults = lib.mkOption {
       type = t.nullOr (t.submodule { options = {
+      botLoopProtection = lib.mkOption {
+        type = t.nullOr (t.submodule { options = {
+        cooldownSeconds = lib.mkOption {
+          type = t.nullOr (t.int);
+          default = null;
+        };
+        enabled = lib.mkOption {
+          type = t.nullOr (t.bool);
+          default = null;
+        };
+        maxEventsPerWindow = lib.mkOption {
+          type = t.nullOr (t.int);
+          default = null;
+        };
+        windowSeconds = lib.mkOption {
+          type = t.nullOr (t.int);
+          default = null;
+        };
+      }; });
+        default = null;
+      };
       contextVisibility = lib.mkOption {
         type = t.nullOr (t.enum [ "all" "allowlist" "allowlist_quote" ]);
         default = null;
@@ -5761,43 +5782,43 @@ in
       byChannel = lib.mkOption {
         type = t.nullOr (t.submodule { options = {
         discord = lib.mkOption {
-          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "steer-backlog" ]) (t.enum [ "steer+backlog" ]) (t.enum [ "queue" ]) (t.enum [ "interrupt" ]) ]);
+          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "interrupt" ]) ]);
           default = null;
         };
         imessage = lib.mkOption {
-          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "steer-backlog" ]) (t.enum [ "steer+backlog" ]) (t.enum [ "queue" ]) (t.enum [ "interrupt" ]) ]);
+          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "interrupt" ]) ]);
           default = null;
         };
         irc = lib.mkOption {
-          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "steer-backlog" ]) (t.enum [ "steer+backlog" ]) (t.enum [ "queue" ]) (t.enum [ "interrupt" ]) ]);
+          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "interrupt" ]) ]);
           default = null;
         };
         mattermost = lib.mkOption {
-          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "steer-backlog" ]) (t.enum [ "steer+backlog" ]) (t.enum [ "queue" ]) (t.enum [ "interrupt" ]) ]);
+          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "interrupt" ]) ]);
           default = null;
         };
         msteams = lib.mkOption {
-          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "steer-backlog" ]) (t.enum [ "steer+backlog" ]) (t.enum [ "queue" ]) (t.enum [ "interrupt" ]) ]);
+          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "interrupt" ]) ]);
           default = null;
         };
         signal = lib.mkOption {
-          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "steer-backlog" ]) (t.enum [ "steer+backlog" ]) (t.enum [ "queue" ]) (t.enum [ "interrupt" ]) ]);
+          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "interrupt" ]) ]);
           default = null;
         };
         slack = lib.mkOption {
-          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "steer-backlog" ]) (t.enum [ "steer+backlog" ]) (t.enum [ "queue" ]) (t.enum [ "interrupt" ]) ]);
+          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "interrupt" ]) ]);
           default = null;
         };
         telegram = lib.mkOption {
-          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "steer-backlog" ]) (t.enum [ "steer+backlog" ]) (t.enum [ "queue" ]) (t.enum [ "interrupt" ]) ]);
+          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "interrupt" ]) ]);
           default = null;
         };
         webchat = lib.mkOption {
-          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "steer-backlog" ]) (t.enum [ "steer+backlog" ]) (t.enum [ "queue" ]) (t.enum [ "interrupt" ]) ]);
+          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "interrupt" ]) ]);
           default = null;
         };
         whatsapp = lib.mkOption {
-          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "steer-backlog" ]) (t.enum [ "steer+backlog" ]) (t.enum [ "queue" ]) (t.enum [ "interrupt" ]) ]);
+          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "interrupt" ]) ]);
           default = null;
         };
       }; });
@@ -5820,7 +5841,7 @@ in
         default = null;
       };
       mode = lib.mkOption {
-        type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "steer-backlog" ]) (t.enum [ "steer+backlog" ]) (t.enum [ "queue" ]) (t.enum [ "interrupt" ]) ]);
+        type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "interrupt" ]) ]);
         default = null;
       };
     }; });
