@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 652af36d17a37734ab21db7768fd400d33f9373c. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev ebd829cffd1b43422cff2dfcd92cb332812b6674. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -61,6 +61,10 @@ in
     };
     enabled = lib.mkOption {
       type = t.nullOr (t.bool);
+      default = null;
+    };
+    fallbacks = lib.mkOption {
+      type = t.nullOr (t.listOf (t.str));
       default = null;
     };
     maxConcurrentSessions = lib.mkOption {
