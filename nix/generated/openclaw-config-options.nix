@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 42b95a9eb1eb1b243f39e210868967063277e779. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 83d7ab0d362fdb50922c4875a0cad8e02ec9a344. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -5863,11 +5863,23 @@ in
       type = t.nullOr (t.submodule { options = {
       emojis = lib.mkOption {
         type = t.nullOr (t.submodule { options = {
+        build = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
         coding = lib.mkOption {
           type = t.nullOr (t.str);
           default = null;
         };
         compacting = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        concierge = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        deploy = lib.mkOption {
           type = t.nullOr (t.str);
           default = null;
         };
