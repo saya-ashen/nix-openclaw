@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev ba8a6499f02f3e07e2934b7b54906c9db9ec607c. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 0ad3d25fb7cd8597e92f1f1fc5c2bbe1b2c76cf4. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -1636,33 +1636,12 @@ in
       };
       silentReply = lib.mkOption {
         type = t.nullOr (t.submodule { options = {
-        direct = lib.mkOption {
-          type = t.nullOr (t.oneOf [ (t.enum [ "allow" ]) (t.enum [ "disallow" ]) ]);
-          default = null;
-        };
         group = lib.mkOption {
           type = t.nullOr (t.oneOf [ (t.enum [ "allow" ]) (t.enum [ "disallow" ]) ]);
           default = null;
         };
         internal = lib.mkOption {
           type = t.nullOr (t.oneOf [ (t.enum [ "allow" ]) (t.enum [ "disallow" ]) ]);
-          default = null;
-        };
-      }; });
-        default = null;
-      };
-      silentReplyRewrite = lib.mkOption {
-        type = t.nullOr (t.submodule { options = {
-        direct = lib.mkOption {
-          type = t.nullOr (t.bool);
-          default = null;
-        };
-        group = lib.mkOption {
-          type = t.nullOr (t.bool);
-          default = null;
-        };
-        internal = lib.mkOption {
-          type = t.nullOr (t.bool);
           default = null;
         };
       }; });
@@ -1913,6 +1892,10 @@ in
       };
       groupChat = lib.mkOption {
         type = t.nullOr (t.submodule { options = {
+        ambientTurns = lib.mkOption {
+          type = t.nullOr (t.enum [ "user_request" "room_event" ]);
+          default = null;
+        };
         historyLimit = lib.mkOption {
           type = t.nullOr (t.int);
           default = null;
@@ -5778,6 +5761,10 @@ in
     };
     groupChat = lib.mkOption {
       type = t.nullOr (t.submodule { options = {
+      ambientTurns = lib.mkOption {
+        type = t.nullOr (t.enum [ "user_request" "room_event" ]);
+        default = null;
+      };
       historyLimit = lib.mkOption {
         type = t.nullOr (t.int);
         default = null;
@@ -7836,33 +7823,12 @@ in
     type = t.nullOr (t.attrsOf (t.submodule { options = {
     silentReply = lib.mkOption {
       type = t.nullOr (t.submodule { options = {
-      direct = lib.mkOption {
-        type = t.nullOr (t.oneOf [ (t.enum [ "allow" ]) (t.enum [ "disallow" ]) ]);
-        default = null;
-      };
       group = lib.mkOption {
         type = t.nullOr (t.oneOf [ (t.enum [ "allow" ]) (t.enum [ "disallow" ]) ]);
         default = null;
       };
       internal = lib.mkOption {
         type = t.nullOr (t.oneOf [ (t.enum [ "allow" ]) (t.enum [ "disallow" ]) ]);
-        default = null;
-      };
-    }; });
-      default = null;
-    };
-    silentReplyRewrite = lib.mkOption {
-      type = t.nullOr (t.submodule { options = {
-      direct = lib.mkOption {
-        type = t.nullOr (t.bool);
-        default = null;
-      };
-      group = lib.mkOption {
-        type = t.nullOr (t.bool);
-        default = null;
-      };
-      internal = lib.mkOption {
-        type = t.nullOr (t.bool);
         default = null;
       };
     }; });
