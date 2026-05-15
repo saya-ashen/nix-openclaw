@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev c3a211993cd5933e00745b1d1ab402b8fd30825b. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev ba8a6499f02f3e07e2934b7b54906c9db9ec607c. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -5505,6 +5505,23 @@ in
       type = t.nullOr (t.attrsOf (t.submodule { options = {
       args = lib.mkOption {
         type = t.nullOr (t.listOf (t.str));
+        default = null;
+      };
+      codex = lib.mkOption {
+        type = t.nullOr (t.submodule { options = {
+        agents = lib.mkOption {
+          type = t.nullOr (t.listOf (t.str));
+          default = null;
+        };
+        defaultToolsApprovalMode = lib.mkOption {
+          type = t.nullOr (t.enum [ "auto" "prompt" "approve" ]);
+          default = null;
+        };
+        default_tools_approval_mode = lib.mkOption {
+          type = t.nullOr (t.enum [ "auto" "prompt" "approve" ]);
+          default = null;
+        };
+      }; });
         default = null;
       };
       command = lib.mkOption {
