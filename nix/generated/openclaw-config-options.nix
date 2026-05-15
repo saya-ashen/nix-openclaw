@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev eb4e20ca1da2a2e667137bd1724d76ef91b483c7. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev a9aafc84b16e3def65e8f2761209db18e216da13. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -8026,6 +8026,59 @@ in
         default = null;
       };
     }; }));
+      default = null;
+    };
+    codeMode = lib.mkOption {
+      type = t.nullOr (t.oneOf [ (t.bool) (t.submodule { options = {
+      enabled = lib.mkOption {
+        type = t.nullOr (t.bool);
+        default = null;
+      };
+      languages = lib.mkOption {
+        type = t.nullOr (t.listOf (t.enum [ "javascript" "typescript" ]));
+        default = null;
+      };
+      maxOutputBytes = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
+      maxPendingToolCalls = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
+      maxSearchLimit = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
+      maxSnapshotBytes = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
+      memoryLimitBytes = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
+      mode = lib.mkOption {
+        type = t.nullOr (t.enum [ "only" ]);
+        default = null;
+      };
+      runtime = lib.mkOption {
+        type = t.nullOr (t.enum [ "quickjs-wasi" ]);
+        default = null;
+      };
+      searchDefaultLimit = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
+      snapshotTtlSeconds = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
+      timeoutMs = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
+    }; }) ]);
       default = null;
     };
     deny = lib.mkOption {
