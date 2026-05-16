@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev e485640da47ad0cf4995fd3b430fa67027b29d8e. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 3b2cd0dd1a855a6af8b3f2e0095b40499a07470c. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -7423,6 +7423,37 @@ in
       };
       maxRefsPerProvider = lib.mkOption {
         type = t.nullOr (t.int);
+        default = null;
+      };
+    }; });
+      default = null;
+    };
+  }; });
+    default = null;
+  };
+
+  security = lib.mkOption {
+    type = t.nullOr (t.submodule { options = {
+    audit = lib.mkOption {
+      type = t.nullOr (t.submodule { options = {
+      suppressions = lib.mkOption {
+        type = t.nullOr (t.listOf (t.submodule { options = {
+        checkId = lib.mkOption {
+          type = t.str;
+        };
+        detailIncludes = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        reason = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+        titleIncludes = lib.mkOption {
+          type = t.nullOr (t.str);
+          default = null;
+        };
+      }; }));
         default = null;
       };
     }; });
