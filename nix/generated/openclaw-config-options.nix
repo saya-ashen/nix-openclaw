@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev b29152e3b9511a55b9923f35f9e486ca1e8188a5. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 592aae3696da0af9e95537d39944e333e551fefe. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -1866,6 +1866,10 @@ in
       };
       default = lib.mkOption {
         type = t.nullOr (t.bool);
+        default = null;
+      };
+      description = lib.mkOption {
+        type = t.nullOr (t.str);
         default = null;
       };
       embeddedHarness = lib.mkOption {
@@ -6461,7 +6465,7 @@ in
             default = null;
           };
           thinkingFormat = lib.mkOption {
-            type = t.nullOr (t.oneOf [ (t.enum [ "openai" ]) (t.enum [ "openrouter" ]) (t.enum [ "deepseek" ]) (t.enum [ "qwen" ]) (t.enum [ "qwen-chat-template" ]) (t.enum [ "zai" ]) ]);
+            type = t.nullOr (t.oneOf [ (t.enum [ "openai" ]) (t.enum [ "openrouter" ]) (t.enum [ "deepseek" ]) (t.enum [ "together" ]) (t.enum [ "qwen" ]) (t.enum [ "qwen-chat-template" ]) (t.enum [ "zai" ]) ]);
             default = null;
           };
           toolCallArgumentsEncoding = lib.mkOption {
@@ -7312,6 +7316,15 @@ in
     };
     proxyUrl = lib.mkOption {
       type = t.nullOr (t.str);
+      default = null;
+    };
+    tls = lib.mkOption {
+      type = t.nullOr (t.submodule { options = {
+      caFile = lib.mkOption {
+        type = t.nullOr (t.str);
+        default = null;
+      };
+    }; });
       default = null;
     };
   }; });
