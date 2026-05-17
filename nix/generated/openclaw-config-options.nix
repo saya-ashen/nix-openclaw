@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 4ccd07718d2ff0496902bb5cfefdf7ddd3855b60. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 30263f6d35b1e207f5cfa364ff9fa65e7ae84c18. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -7741,6 +7741,14 @@ in
     writeLock = lib.mkOption {
       type = t.nullOr (t.submodule { options = {
       acquireTimeoutMs = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
+      maxHoldMs = lib.mkOption {
+        type = t.nullOr (t.int);
+        default = null;
+      };
+      staleMs = lib.mkOption {
         type = t.nullOr (t.int);
         default = null;
       };
