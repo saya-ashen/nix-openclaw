@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 3b2cd0dd1a855a6af8b3f2e0095b40499a07470c. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 3411a481f703928efbe0e8b505676167baea0084. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -1892,16 +1892,16 @@ in
       };
       groupChat = lib.mkOption {
         type = t.nullOr (t.submodule { options = {
-        ambientTurns = lib.mkOption {
-          type = t.nullOr (t.enum [ "user_request" "room_event" ]);
-          default = null;
-        };
         historyLimit = lib.mkOption {
           type = t.nullOr (t.int);
           default = null;
         };
         mentionPatterns = lib.mkOption {
           type = t.nullOr (t.listOf (t.str));
+          default = null;
+        };
+        unmentionedInbound = lib.mkOption {
+          type = t.nullOr (t.enum [ "user_request" "room_event" ]);
           default = null;
         };
         visibleReplies = lib.mkOption {
@@ -5765,16 +5765,16 @@ in
     };
     groupChat = lib.mkOption {
       type = t.nullOr (t.submodule { options = {
-      ambientTurns = lib.mkOption {
-        type = t.nullOr (t.enum [ "user_request" "room_event" ]);
-        default = null;
-      };
       historyLimit = lib.mkOption {
         type = t.nullOr (t.int);
         default = null;
       };
       mentionPatterns = lib.mkOption {
         type = t.nullOr (t.listOf (t.str));
+        default = null;
+      };
+      unmentionedInbound = lib.mkOption {
+        type = t.nullOr (t.enum [ "user_request" "room_event" ]);
         default = null;
       };
       visibleReplies = lib.mkOption {
