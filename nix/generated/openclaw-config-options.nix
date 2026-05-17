@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 3411a481f703928efbe0e8b505676167baea0084. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev b29152e3b9511a55b9923f35f9e486ca1e8188a5. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -4900,6 +4900,10 @@ in
     };
     remote = lib.mkOption {
       type = t.nullOr (t.submodule { options = {
+      enabled = lib.mkOption {
+        type = t.nullOr (t.bool);
+        default = null;
+      };
       password = lib.mkOption {
         type = t.nullOr (t.oneOf [ (t.str) (t.oneOf [ (t.submodule { options = {
         id = lib.mkOption {
@@ -4932,6 +4936,10 @@ in
           type = t.enum [ "exec" ];
         };
       }; }) ]) ]);
+        default = null;
+      };
+      remotePort = lib.mkOption {
+        type = t.nullOr (t.int);
         default = null;
       };
       sshIdentity = lib.mkOption {
