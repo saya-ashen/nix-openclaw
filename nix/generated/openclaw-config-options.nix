@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 5e33bb6458e8b5f051ba159e7c319fd4af63e706. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 4f5e8177828cbb399764a34e1c67b4f6cad5bb63. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -2931,6 +2931,59 @@ in
             default = null;
           };
         }; }));
+          default = null;
+        };
+        codeMode = lib.mkOption {
+          type = t.nullOr (t.oneOf [ (t.bool) (t.submodule { options = {
+          enabled = lib.mkOption {
+            type = t.nullOr (t.bool);
+            default = null;
+          };
+          languages = lib.mkOption {
+            type = t.nullOr (t.listOf (t.enum [ "javascript" "typescript" ]));
+            default = null;
+          };
+          maxOutputBytes = lib.mkOption {
+            type = t.nullOr (t.int);
+            default = null;
+          };
+          maxPendingToolCalls = lib.mkOption {
+            type = t.nullOr (t.int);
+            default = null;
+          };
+          maxSearchLimit = lib.mkOption {
+            type = t.nullOr (t.int);
+            default = null;
+          };
+          maxSnapshotBytes = lib.mkOption {
+            type = t.nullOr (t.int);
+            default = null;
+          };
+          memoryLimitBytes = lib.mkOption {
+            type = t.nullOr (t.int);
+            default = null;
+          };
+          mode = lib.mkOption {
+            type = t.nullOr (t.enum [ "only" ]);
+            default = null;
+          };
+          runtime = lib.mkOption {
+            type = t.nullOr (t.enum [ "quickjs-wasi" ]);
+            default = null;
+          };
+          searchDefaultLimit = lib.mkOption {
+            type = t.nullOr (t.int);
+            default = null;
+          };
+          snapshotTtlSeconds = lib.mkOption {
+            type = t.nullOr (t.int);
+            default = null;
+          };
+          timeoutMs = lib.mkOption {
+            type = t.nullOr (t.int);
+            default = null;
+          };
+        }; }) ]);
           default = null;
         };
         deny = lib.mkOption {
