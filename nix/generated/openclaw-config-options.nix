@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 1d77170a305b039ce609a04ae17f0ec1c5b69ce8. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev f07c87405c3094feceaaf2f0f19a2e765a25e78d. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -5862,11 +5862,19 @@ in
           type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "interrupt" ]) ]);
           default = null;
         };
+        googlechat = lib.mkOption {
+          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "interrupt" ]) ]);
+          default = null;
+        };
         imessage = lib.mkOption {
           type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "interrupt" ]) ]);
           default = null;
         };
         irc = lib.mkOption {
+          type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "interrupt" ]) ]);
+          default = null;
+        };
+        matrix = lib.mkOption {
           type = t.nullOr (t.oneOf [ (t.enum [ "steer" ]) (t.enum [ "followup" ]) (t.enum [ "collect" ]) (t.enum [ "interrupt" ]) ]);
           default = null;
         };
