@@ -1,4 +1,4 @@
-# Generated from upstream OpenClaw schema at rev 6fcfeed5dc6709ecff6bed5ac2e0085465772767. DO NOT EDIT.
+# Generated from upstream OpenClaw schema at rev 1d77170a305b039ce609a04ae17f0ec1c5b69ce8. DO NOT EDIT.
 # Generator: nix/scripts/generate-config-options.ts
 { lib }:
 let
@@ -6328,7 +6328,8 @@ in
         default = null;
       };
       baseUrl = lib.mkOption {
-        type = t.str;
+        type = t.nullOr (t.str);
+        default = null;
       };
       contextTokens = lib.mkOption {
         type = t.nullOr (t.int);
@@ -6413,7 +6414,7 @@ in
         default = null;
       };
       models = lib.mkOption {
-        type = t.listOf (t.submodule { options = {
+        type = t.nullOr (t.listOf (t.submodule { options = {
         agentRuntime = lib.mkOption {
           type = t.nullOr (t.submodule { options = {
           id = lib.mkOption {
@@ -6607,7 +6608,8 @@ in
           type = t.nullOr (t.bool);
           default = null;
         };
-      }; });
+      }; }));
+        default = null;
       };
       params = lib.mkOption {
         type = t.nullOr (t.attrsOf (t.anything));
